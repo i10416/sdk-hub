@@ -34,7 +34,7 @@
           };
 
           sharedBuildInputs = with pkgs; [
-            bazelisk
+            toolchain
           ];
         in
         {
