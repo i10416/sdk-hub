@@ -1,0 +1,3 @@
+[submodule "spec/hubspot/json"]
+	path = spec/hubspot/json
+	url = https://github.com/HubSpot/HubSpot-public-api-spec-collection.git

@@ -1,0 +1,136 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Contacts",
+    "description": "",
+    "version": "v3",
+    "x-hubspot-product-tier-requirements": {
+      "marketing": "FREE",
+      "sales": "FREE",
+      "service": "FREE",
+      "cms": "FREE"
+    },
+    "x-hubspot-api-use-case": "Retrieve a contact by ID to bring that contact data into your external system.",
+    "x-hubspot-related-documentation": [
+      {
+        "name": "Contacts Guide",
+        "url": "https://developers.hubspot.com/docs/guides/api/crm/objects/contacts"
+      }
+    ],
+    "x-hubspot-introduction": "Use the contacts API to create and manage contacts."
+  },
+  "servers": [
+    {
+      "url": "https://api.hubapi.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Batch"
+    },
+    {
+      "name": "Basic"
+    },
+    {
+      "name": "Search"
+    }
+  ],
+  "paths": {
+    "/crm/v3/objects/contacts/batch/read": {
+      "post": {
+        "tags": [
+          "Batch"
+        ],
+        "summary": "Retrieve a batch of contacts",
+        "description": "Retrieve a batch of contacts by ID (`contactId`) or unique property value (`idProperty`). ",
+        "operationId": "post-/crm/v3/objects/contacts/batch/read_read",
+        "parameters": [
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Empty"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchResponseSimplePublicObject"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "crm.objects.contacts.read"
+            ],
+            "description": []
+          },
+          {
+            "private_apps": [
+              "crm.objects.contacts.read"
+            ],
+            "description": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Error": {
+        "description": "",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A human readable message describing the error along with remediation steps where appropriate",
+            "example": "Invalid input (details will vary based on the error)"
+          }
+        },
+        "example": {
+          "message": "Invalid input (details will vary based on the error)",
+          "correlationId": "aeb5f871-7f07-4993-9211-075dc63e7cbf",
+          "category": "VALIDATION_ERROR",
+          "links": {
+            "knowledge-base": "https://www.hubspot.com/products/service/knowledge-base"
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Empty": {
+        "type": "string",
+        "description": "",
+        "properties": {}
+      },
+      "ErrorDetail": {
+        "required": [
+          "message"
+        ],
+        "message": {
+          "type": "string",
+          "description": "A human readable message describing the error along with remediation steps where appropriate"
+        }
+      },
+      "BatchResponseSimplePublicObject": {
+        "type": "string"
+      },
+      "BatchReadInputSimplePublicObjectId": {
+        "type": "string"
+      },
+      "BatchResponseSimplePublicObjectWithErrors": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+includes = [
+  "//spec/hubspot/json/PublicApiSpecs/CRM/Contacts/Rollouts/424/v3/contacts.json"
+]
