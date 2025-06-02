@@ -76,11 +76,12 @@ impl crate::HubAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn v3_get_object<T: DeserializeOwned>(
         &self,
-        GetObjectRequest { name, id }: GetObjectRequest,
+        GetObjectRequest { name, id, fields }: GetObjectRequest,
     ) -> Result<Object<T>, crate::crm::v3::Error> {
         let response = self
             .client
             .get(format!("https://api.hubapi.com/crm/v3/objects/{name}/{id}",))
+            .query(&[("properties", fields.join(","))])
             .send()
             .await?;
         match response.status() {
@@ -98,9 +99,9 @@ impl crate::HubAPI {
         }
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn v3_update_object<Input: Debug + Serialize, T: DeserializeOwned>(
+    pub async fn v3_update_object<T: Debug + Serialize + DeserializeOwned>(
         &self,
-        req: UpdateObjectRequest<Input>,
+        req: UpdateObjectRequest<T>,
     ) -> Result<Object<T>, crate::crm::v3::Error> {
         let response = self
             .client
@@ -155,13 +156,15 @@ pub struct GetObjectRequest {
     name: String,
     // path
     id: String,
+    fields: Vec<&'static str>,
 }
 
 impl GetObjectRequest {
-    pub fn new(name: &str, id: &str) -> Self {
+    pub fn new(name: &str, id: &str, fields: &[&'static str]) -> Self {
         Self {
             name: name.to_string(),
             id: id.to_string(),
+            fields: fields.to_vec(),
         }
     }
 }
@@ -198,5 +201,15 @@ pub struct UpdateObjectRequest<T: Serialize> {
     // path
     #[serde(skip)]
     id: String,
+    // body
     properties: T,
+}
+impl<T: Serialize> UpdateObjectRequest<T> {
+    pub fn new(name: &str, id: &str, properties: T) -> Self {
+        Self {
+            name: name.to_string(),
+            id: id.to_string(),
+            properties,
+        }
+    }
 }

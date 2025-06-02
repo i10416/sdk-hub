@@ -16,6 +16,7 @@ impl crate::HubAPI {
             .v3_get_object::<Resource>(GetObjectRequest {
                 name: RESOURCE_NAME.to_string(),
                 id: id.to_string(),
+                fields: ["amount", "dealstage", "dealname", "pipeline"].to_vec(),
             })
             .await?;
         Ok(response)

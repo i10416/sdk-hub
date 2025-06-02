@@ -20,6 +20,7 @@ impl crate::HubAPI {
             .v3_get_object::<Resource>(GetObjectRequest {
                 name: RESOURCE_NAME.to_string(),
                 id: id.to_string(),
+                fields: ["domain", "name"].to_vec()
             })
             .await?;
         Ok(response)

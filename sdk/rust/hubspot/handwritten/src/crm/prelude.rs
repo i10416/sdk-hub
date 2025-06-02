@@ -35,3 +35,47 @@ pub struct Pagination {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub after: Option<String>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct Association {
+    #[serde(rename = "toObjectId")]
+    to_object_id: usize,
+    #[serde(rename = "associationTypes")]
+    association_types: Vec<AssociationType>,
+}
+
+impl Association {
+    pub fn to_object_id(&self) -> usize {
+        self.to_object_id
+    }
+    pub fn association_types(&self) -> &Vec<AssociationType> {
+        &self.association_types
+    }
+}
+#[derive(Debug, Deserialize)]
+pub enum AssociationTypeCategory {
+    #[serde(rename = "USER_DEFINED")]
+    UserDefined,
+    #[serde(rename = "HUBSPOT_DEFINED")]
+    HubSpotDefined,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AssociationType {
+    category: AssociationTypeCategory,
+    #[serde(rename = "typeId")]
+    type_id: usize,
+    label: Option<String>,
+}
+
+impl AssociationType {
+    pub fn category(&self) -> &AssociationTypeCategory {
+        &self.category
+    }
+    pub fn type_id(&self) -> usize {
+        self.type_id
+    }
+    pub fn label(&self) -> Option<&String> {
+        self.label.as_ref()
+    }
+}

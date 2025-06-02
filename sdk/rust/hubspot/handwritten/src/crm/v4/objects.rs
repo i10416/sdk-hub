@@ -6,6 +6,8 @@ use std::io::ErrorKind;
 use reqwest::StatusCode;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
+use crate::crm::prelude::Association;
+
 // Resource type
 #[derive(Debug, Deserialize)]
 pub struct Object<T> {
@@ -27,6 +29,12 @@ pub struct List<T> {
     #[serde(default)]
     pub paging: Option<Paging>,
     pub results: Vec<Object<T>>,
+}
+#[derive(Debug, Deserialize)]
+pub struct Associations {
+    #[serde(default)]
+    pub paging: Option<Paging>,
+    pub results: Vec<Association>,
 }
 #[derive(Debug, Deserialize)]
 pub struct Paging {
@@ -52,14 +60,14 @@ pub struct Pagination {
 
 impl crate::HubAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn v4_create_nested_object<P: Debug + Serialize, R: DeserializeOwned>(
+    pub async fn v4_create_associations<P: Debug + Serialize, R: DeserializeOwned>(
         &self,
-        req: CreateNestedObjectRequest<P>,
-    ) -> Result<Object<R>, crate::crm::v3::Error> {
+        req: CreateAssociationRequest<P>,
+    ) -> Result<Association, crate::crm::v3::Error> {
         let response = self
             .client
             .post(format!(
-                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/{name}/{id}",
+                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/associations/{name}/{id}",
                 parent_name = req.parent_name,
                 parent_id = req.parent_id,
                 name = req.name,
@@ -85,17 +93,17 @@ impl crate::HubAPI {
 
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
 
-    pub async fn v4_list_nested_objects<T: DeserializeOwned>(
+    pub async fn v4_list_associations(
         &self,
         parent_name: &str,
         parent_id: &str,
         name: &str,
         pagination: Pagination,
-    ) -> Result<List<T>, crate::crm::v3::Error> {
+    ) -> Result<Associations, crate::crm::v3::Error> {
         let response = self
             .client
             .get(format!(
-                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/{name}",
+                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/associations/{name}",
             ))
             .query(&pagination)
             .send()
@@ -115,19 +123,19 @@ impl crate::HubAPI {
         }
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn v4_get_nested_object<T: DeserializeOwned>(
+    pub async fn v4_get_associations<T: DeserializeOwned>(
         &self,
-        GetNestedObjectRequest {
+        GetAssociationRequest {
             parent_name,
             parent_id,
             name,
             id,
-        }: GetNestedObjectRequest,
+        }: GetAssociationRequest,
     ) -> Result<Object<T>, crate::crm::v3::Error> {
         let response = self
             .client
             .get(format!(
-                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/{name}/{id}",
+                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/associations/{name}/{id}",
             ))
             .send()
             .await?;
@@ -146,14 +154,14 @@ impl crate::HubAPI {
         }
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn v4_update_nested_object<Input: Debug + Serialize, T: DeserializeOwned>(
+    pub async fn v4_update_associations<Input: Debug + Serialize, T: DeserializeOwned>(
         &self,
-        req: UpdateObjectRequest<Input>,
+        req: UpdateAssociationRequest<Input>,
     ) -> Result<Object<T>, crate::crm::v3::Error> {
         let response = self
             .client
             .patch(format!(
-                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/{name}/{id}",
+                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/associations/{name}/{id}",
                 parent_name = req.parent_name,
                 parent_id = req.parent_id,
                 name = req.name,
@@ -177,19 +185,19 @@ impl crate::HubAPI {
         }
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn v4_delete_nested_object(
+    pub async fn v4_delete_associations(
         &self,
-        DeleteNestedObjectRequest {
+        DeleteAssociationRequest {
             parent_name,
             parent_id,
             name,
             id,
-        }: DeleteNestedObjectRequest,
+        }: DeleteAssociationRequest,
     ) -> Result<(), crate::crm::v3::Error> {
         let response = self
             .client
             .delete(format!(
-                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/{name}/{id}",
+                "https://api.hubapi.com/crm/v4/objects/{parent_name}/{parent_id}/associations/{name}/{id}",
             ))
             .send()
             .await?;
@@ -207,7 +215,7 @@ impl crate::HubAPI {
 }
 
 #[derive(Debug, Serialize)]
-pub struct GetNestedObjectRequest {
+pub struct GetAssociationRequest {
     // path
     parent_name: String,
     // path
@@ -218,7 +226,7 @@ pub struct GetNestedObjectRequest {
     id: String,
 }
 
-impl GetNestedObjectRequest {
+impl GetAssociationRequest {
     pub fn new(parent_name: &str, parent_id: &str, name: &str, id: &str) -> Self {
         Self {
             parent_name: parent_name.to_string(),
@@ -229,7 +237,7 @@ impl GetNestedObjectRequest {
     }
 }
 #[derive(Debug, Serialize)]
-pub struct DeleteNestedObjectRequest {
+pub struct DeleteAssociationRequest {
     // path
     parent_name: String,
     // path
@@ -240,7 +248,7 @@ pub struct DeleteNestedObjectRequest {
     id: String,
 }
 
-impl DeleteNestedObjectRequest {
+impl DeleteAssociationRequest {
     pub fn new(parent_name: &str, parent_id: &str, name: &str, id: &str) -> Self {
         Self {
             parent_name: parent_name.to_string(),
@@ -252,7 +260,7 @@ impl DeleteNestedObjectRequest {
 }
 
 #[derive(Debug, Serialize)]
-pub struct CreateNestedObjectRequest<P> {
+pub struct CreateAssociationRequest<P> {
     // path
     #[serde(skip)]
     pub parent_name: String,
@@ -269,7 +277,7 @@ pub struct CreateNestedObjectRequest<P> {
 }
 
 #[derive(Debug, Serialize)]
-pub struct UpdateObjectRequest<T: Serialize> {
+pub struct UpdateAssociationRequest<T: Serialize> {
     // path
     #[serde(skip)]
     pub parent_name: String,
