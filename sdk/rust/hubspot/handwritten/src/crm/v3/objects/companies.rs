@@ -1,8 +1,9 @@
-use serde::Deserialize;
+mod schema;
+pub use schema::*;
 
 use crate::crm::prelude::Object;
 
-use super::{GetObjectRequest, ObjectProperties};
+use super::GetObjectRequest;
 
 pub const BASE_ENDPOINT: &str = "https://api.hubapi.com/crm/v3/objects/companies";
 
@@ -20,7 +21,7 @@ impl crate::HubAPI {
             .v3_get_object::<Resource>(GetObjectRequest {
                 name: RESOURCE_NAME.to_string(),
                 id: id.to_string(),
-                fields: ["domain", "name"].to_vec()
+                fields: ["domain", "name"].to_vec(),
             })
             .await?;
         Ok(response)
@@ -37,12 +38,4 @@ impl crate::HubAPI {
         })
         .await
     }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Company {
-    #[serde(flatten)]
-    pub shared_properties: ObjectProperties,
-    pub domain: Option<String>,
-    pub name: String,
 }

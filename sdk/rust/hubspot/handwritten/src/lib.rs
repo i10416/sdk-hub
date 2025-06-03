@@ -16,9 +16,15 @@ impl HubAPI {
         Self { client }
     }
     fn mk_header(token: &str) -> HeaderMap {
-        HeaderMap::from_iter([(
-            HeaderName::from_static("authorization"),
-            HeaderValue::from_str(&format!("Bearer {token}")).expect("Invalid Token"),
-        )])
+        HeaderMap::from_iter([
+            (
+                HeaderName::from_static("authorization"),
+                HeaderValue::from_str(&format!("Bearer {token}")).expect("Invalid Token"),
+            ),
+            (
+                HeaderName::from_static("accept"),
+                HeaderValue::from_static("application/json"),
+            ),
+        ])
     }
 }

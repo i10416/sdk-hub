@@ -1,6 +1,4 @@
-use crate::crm::v4::objects::{DeleteAssociationRequest, GetAssociationRequest, List};
-
-type Resource = ();
+use crate::crm::v4::objects::DeleteAssociationRequest;
 
 impl crate::HubAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]

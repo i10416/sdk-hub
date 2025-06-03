@@ -1,5 +1,7 @@
+mod schema;
+pub use schema::*;
+
 use crate::crm::{prelude::Object, v3::objects::GetObjectRequest};
-use serde::Deserialize;
 
 pub const BASE_ENDPOINT: &str = "https://api.hubapi.com/crm/v3/objects/deal";
 type Resource = Deal;
@@ -33,18 +35,4 @@ impl crate::HubAPI {
         })
         .await
     }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Deal {
-    #[serde(flatten)]
-    pub shared_properties: super::ObjectProperties,
-    pub amount: Option<String>,
-    #[serde(rename = "closeDate")]
-    pub close_date: Option<String>,
-    #[serde(rename = "createDate")]
-    pub create_date: Option<String>,
-    pub dealstage: Option<String>,
-    pub dealname: String,
-    pub pipeline: Option<String>,
 }

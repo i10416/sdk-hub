@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 // Resource type
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Object<T> {
     pub id: String,
     pub properties: T,
@@ -9,10 +9,17 @@ pub struct Object<T> {
 
 // List type
 #[derive(Debug, Deserialize)]
-pub struct List<T> {
+pub struct ObjectList<T> {
     #[serde(default)]
     pub paging: Option<Paging>,
     pub results: Vec<Object<T>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct List<T> {
+    #[serde(default)]
+    pub paging: Option<Paging>,
+    pub results: Vec<T>,
 }
 #[derive(Debug, Deserialize)]
 pub struct Paging {
@@ -26,7 +33,7 @@ pub struct Next {
     pub link: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct Pagination {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub limit: Option<usize>,
