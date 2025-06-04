@@ -10,7 +10,9 @@ pub struct PropertyValue {
     timestamp: u64,
     source_id: String,
     request_id: String,
-    source_upstream_deployable: String,
+    #[serde(default)]
+    source_upstream_deployable: Option<String>,
+    #[serde(default)]
     is_encrypted: bool,
     sensitivity_level: String,
     updated_by_user_id: i32,
@@ -24,7 +26,7 @@ impl PropertyValue {
         timestamp: u64,
         source_id: &str,
         request_id: &str,
-        source_upstream_deployable: &str,
+        source_upstream_deployable: Option<&str>,
         is_encrypted: bool,
         sensitivity_level: &str,
         updated_by_user_id: i32,
@@ -37,7 +39,7 @@ impl PropertyValue {
             timestamp,
             source_id: source_id.to_string(),
             request_id: request_id.to_string(),
-            source_upstream_deployable: source_upstream_deployable.to_string(),
+            source_upstream_deployable: source_upstream_deployable.map(str::to_string),
             is_encrypted,
             sensitivity_level: sensitivity_level.to_string(),
             updated_by_user_id,
@@ -75,8 +77,8 @@ impl PropertyValue {
     pub fn request_id(&self) -> &str {
         &self.request_id
     }
-    pub fn source_upstream_deployable(&self) -> &str {
-        &self.source_upstream_deployable
+    pub fn source_upstream_deployable(&self) -> Option<&str> {
+        self.source_upstream_deployable.as_deref()
     }
 }
 
@@ -89,11 +91,13 @@ pub struct PropertyValueVersion {
     timestamp: u64,
     source_id: String,
     request_id: String,
-    source_upstream_deployable: String,
+    #[serde(default)]
+    source_upstream_deployable: Option<String>,
+    #[serde(default)]
     is_encrypted: bool,
-    sensitivity_level: String,
     updated_by_user_id: i32,
-    persistence_timestamp: u64,
+    #[serde(default)]
+    use_timestamp_as_persistence_timestamp: bool,
 }
 
 impl PropertyValueVersion {
@@ -109,8 +113,8 @@ impl PropertyValueVersion {
     pub fn timestamp(&self) -> u64 {
         self.timestamp
     }
-    pub fn persistence_timestamp(&self) -> u64 {
-        self.persistence_timestamp
+    pub fn use_timestamp_as_persistence_timestamp(&self) -> bool {
+        self.use_timestamp_as_persistence_timestamp
     }
     pub fn is_encrypted(&self) -> bool {
         self.is_encrypted
@@ -122,13 +126,10 @@ impl PropertyValueVersion {
         self.updated_by_user_id
     }
 
-    pub fn sensitivity_level(&self) -> &str {
-        &self.sensitivity_level
-    }
     pub fn request_id(&self) -> &str {
         &self.request_id
     }
-    pub fn source_upstream_deployable(&self) -> &str {
-        &self.source_upstream_deployable
+    pub fn source_upstream_deployable(&self) -> Option<&str> {
+        self.source_upstream_deployable.as_deref()
     }
 }
