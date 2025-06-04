@@ -1,8 +1,10 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValue {
+    #[serde(default)]
+    versions: Vec<PropertyValueVersion>,
     value: String,
     source: String,
     timestamp: u64,
@@ -15,6 +17,9 @@ pub struct PropertyValue {
     persistence_timestamp: u64,
 }
 impl PropertyValue {
+    pub fn versions(&self) -> &Vec<PropertyValueVersion> {
+        &self.versions
+    }
     pub fn value(&self) -> &str {
         &self.value
     }
@@ -48,7 +53,7 @@ impl PropertyValue {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValueVersion {
     name: String,
