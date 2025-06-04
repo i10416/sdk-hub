@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "ts": 1749017034,
+  "limit": 1,
+  "offset": 0,
+  "total": 13,
+  "count": 1,
+  "ContractUserList": [
+    {
+      "contract_user_id": "***MASKED***",
+      "status": "PENDING",
+      "email": "test@example.com",
+      "first_name": "***MASKED***",
+      "last_name": "***MASKED***"
+    }
+  ]
+}

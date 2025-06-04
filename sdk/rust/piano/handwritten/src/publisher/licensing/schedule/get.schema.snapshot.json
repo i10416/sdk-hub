@@ -1,0 +1,38 @@
+{
+  "code": 0,
+  "ts": 1749017266,
+  "schedule": {
+    "schedule_id": "***MASKED***",
+    "name": "***MASKED***",
+    "aid": "***MASKED***",
+    "deleted": false,
+    "create_date": 1626840127,
+    "update_date": 1626840235,
+    "periods": [
+      {
+        "period_id": "***MASKED***",
+        "name": "***MASKED***",
+        "sell_date": 1626840000,
+        "begin_date": 1626840000,
+        "end_date": 1627704000,
+        "deleted": false,
+        "create_date": 1626840127,
+        "update_date": 1626840127,
+        "is_sale_started": true,
+        "is_active": false
+      },
+      {
+        "period_id": "***MASKED***",
+        "name": "***MASKED***",
+        "sell_date": 1627444800,
+        "begin_date": 1627790400,
+        "end_date": 1659240000,
+        "deleted": false,
+        "create_date": 1626840235,
+        "update_date": 1626840235,
+        "is_sale_started": true,
+        "is_active": false
+      }
+    ]
+  }
+}

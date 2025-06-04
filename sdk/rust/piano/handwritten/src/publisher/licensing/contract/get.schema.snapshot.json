@@ -1,0 +1,38 @@
+{
+  "code": 0,
+  "ts": 1749016879,
+  "contract": {
+    "contract_id": "***MASKED***",
+    "aid": "***MASKED***",
+    "name": "***MASKED***",
+    "description": "***MASKED***",
+    "create_date": 1626840015,
+    "landing_page_url": "***MASKED***",
+    "licensee_id": "***MASKED***",
+    "seats_number": 50,
+    "is_hard_seats_limit_type": false,
+    "rid": "***MASKED***",
+    "schedule_id": "***MASKED***",
+    "contract_is_active": true,
+    "contract_type": "SPECIFIC_EMAIL_ADDRESSES_CONTRACT",
+    "contract_periods": [
+      {
+        "period_id": "***MASKED***",
+        "name": "***MASKED***",
+        "sell_date": 1626840000,
+        "begin_date": 1626840000,
+        "end_date": 1627704000,
+        "status": "ENDED"
+      },
+      {
+        "period_id": "***MASKED***",
+        "name": "***MASKED***",
+        "sell_date": 1627444800,
+        "begin_date": 1627790400,
+        "end_date": 1659240000,
+        "status": "ENDED"
+      }
+    ],
+    "contract_conversions_count": 38
+  }
+}
