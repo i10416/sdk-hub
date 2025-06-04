@@ -2,17 +2,42 @@
 
 A Rust SDK for the Piano API, providing easy-to-use interfaces for user management, access control, licensing, and subscription management.
 
-## Installation
+## Quick Start
+
+### Prerequisites
+
+- Rust 1.70 or later
+- A Piano account with API credentials (App ID and API Token)
+- Access to Piano API endpoints (sandbox or production)
+
+### Installation
 
 Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-# piano-handwritten-api = "0.1.0"
+piano-handwritten-api = { git = "https://github.com/i1041/sdk-hub" }
 tokio = { version = "1.0", features = ["full"] }
 ```
 
-## Quick Start
+#### Feature Flags
+
+This SDK supports the following feature flags to customize functionality and dependencies:
+
+#### Default Features
+
+- `rustls` - Uses rustls as the TLS backend (enabled by default)
+- `tracing` - Enables structured logging and tracing support (enabled by default)
+
+#### TLS Backend Selection
+
+Choose one of the following TLS backends:
+
+- `rustls` - Pure Rust TLS implementation (recommended, enabled by default)
+- `native-tls` - Uses the system's native TLS implementation
+
+
+### Usage Example
 
 ```rust
 use piano_handwritten_api::{PianoAPI, publisher::user::*};
@@ -54,8 +79,6 @@ let api = PianoAPI::new(
 );
 ```
 
-
-
 ## Examples
 
 The `examples/` directory contains comprehensive examples:
@@ -87,6 +110,3 @@ cargo test --doc
 # Run examples (compile check)
 cargo check --examples
 ```
-
-
-
