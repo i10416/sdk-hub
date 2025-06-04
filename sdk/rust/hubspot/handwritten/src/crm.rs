@@ -1,3 +1,5 @@
+mod schema;
+pub use schema::*;
 pub mod prelude;
 
 #[cfg(feature = "crm-v3")]

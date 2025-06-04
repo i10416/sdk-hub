@@ -8,7 +8,6 @@ pub struct ObjectProperties {
     pub hs_lastmodifieddate: Option<String>,
 }
 
-
 #[derive(Debug, Serialize)]
 pub struct GetObjectRequest {
     // path
@@ -52,7 +51,7 @@ pub struct CreateObjectRequest<P> {
     pub properties: P,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateObjectRequest<T: Serialize> {
     // path
     #[serde(skip)]
