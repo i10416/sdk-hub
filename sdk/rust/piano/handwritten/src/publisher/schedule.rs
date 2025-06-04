@@ -4,6 +4,7 @@ pub use self::schema::*;
 
 use crate::{PianoAPI, PianoResponse};
 impl PianoAPI {
+    #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn get_schedule(&self) -> Result<Option<Schedule>, crate::Error> {
         let result = self
             .client
