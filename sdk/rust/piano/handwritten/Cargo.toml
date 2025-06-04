@@ -2,6 +2,13 @@
 name = "piano-handwritten-api"
 version = "0.1.0"
 edition = "2021"
+description = "Unofficial Piano API client library for Rust - handwritten implementation"
+authors = ["i10416"]
+license = "MIT"
+repository = "https://github.com/i10416/sdk-hub"
+documentation = "https://docs.piano.io"
+keywords = ["piano", "api", "client"]
+categories = ["api-bindings"]
 
 [features]
 default = ["rustls", "publisher", "tracing"]
