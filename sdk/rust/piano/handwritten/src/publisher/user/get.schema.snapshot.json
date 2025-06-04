@@ -1,0 +1,118 @@
+{
+  "code": 0,
+  "ts": 1749012929,
+  "user": {
+    "first_name": "***MASKED***",
+    "last_name": "***MASKED***",
+    "personal_name": "***MASKED***",
+    "email": "test@example.com",
+    "uid": "***MASKED***",
+    "image1": null,
+    "create_date": 1626859495,
+    "display_name": "***MASKED***",
+    "reset_password_email_sent": "test@example.com",
+    "custom_fields": [
+      {
+        "fieldName": "***MASKED***",
+        "value": "true",
+        "created": "2024-11-11T06:20:16.000+00:00",
+        "emailCreator": "test@example.com",
+        "sortOrder": 1,
+        "fieldDefinitionId": "***MASKED***",
+        "identityId": "***MASKED***",
+        "dataType": "BOOLEAN",
+        "comment": "",
+        "editable": true,
+        "archived": false,
+        "title": "***MASKED***",
+        "options": [],
+        "favouriteOptions": null,
+        "defaultSortOrder": 1,
+        "tooltip": {
+          "enabled": false,
+          "type": "InfoIcon",
+          "text": ""
+        },
+        "validators": "***MASKED***",
+        "attribute": {}
+      },
+      {
+        "fieldName": "***MASKED***",
+        "value": "[\"Option 1\"]",
+        "created": "2021-07-21T09:26:12.000+00:00",
+        "emailCreator": "test@example.com",
+        "sortOrder": 2,
+        "fieldDefinitionId": "***MASKED***",
+        "identityId": "***MASKED***",
+        "dataType": "SINGLE_SELECT_LIST",
+        "comment": "",
+        "editable": true,
+        "archived": false,
+        "title": "***MASKED***",
+        "options": [
+          "Option 1",
+          "Option 2"
+        ],
+        "favouriteOptions": null,
+        "defaultSortOrder": 2,
+        "tooltip": {
+          "enabled": false,
+          "type": "InfoIcon",
+          "text": ""
+        },
+        "validators": "***MASKED***",
+        "attribute": {}
+      },
+      {
+        "fieldName": "***MASKED***",
+        "value": "",
+        "created": "2022-08-12T02:36:07.000+00:00",
+        "emailCreator": "test@example.com",
+        "sortOrder": 3,
+        "fieldDefinitionId": "***MASKED***",
+        "identityId": "***MASKED***",
+        "dataType": "TEXT",
+        "comment": "",
+        "editable": true,
+        "archived": false,
+        "title": "***MASKED***",
+        "options": [],
+        "favouriteOptions": null,
+        "defaultSortOrder": 3,
+        "tooltip": {
+          "enabled": false,
+          "type": "InfoIcon",
+          "text": ""
+        },
+        "validators": "***MASKED***",
+        "attribute": {
+          "multiline": false
+        }
+      },
+      {
+        "fieldName": "***MASKED***",
+        "value": "",
+        "created": "2022-08-12T02:36:07.000+00:00",
+        "emailCreator": "test@example.com",
+        "sortOrder": null,
+        "fieldDefinitionId": "***MASKED***",
+        "identityId": "***MASKED***",
+        "dataType": "ISO_DATE",
+        "comment": "",
+        "editable": true,
+        "archived": false,
+        "title": "***MASKED***",
+        "options": [],
+        "favouriteOptions": null,
+        "defaultSortOrder": null,
+        "tooltip": {
+          "enabled": false,
+          "type": "InfoIcon",
+          "text": ""
+        },
+        "validators": "***MASKED***",
+        "attribute": {}
+      }
+    ]
+  }
+}

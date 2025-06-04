@@ -66,3 +66,48 @@ impl Licensee {
         &self.name
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{PianoResponse, PianoPaginated};
+
+    #[test]
+    fn test_licensee_deserialization() {
+        let json = serde_json::json!({
+            "licensee_id": "12345",
+            "name": "Test Licensee"
+        });
+
+        let licensee: Licensee = serde_json::from_value(json).expect("Failed to deserialize licensee");
+        assert_eq!(licensee.licensee_id(), "12345");
+        assert_eq!(licensee.name(), "Test Licensee");
+    }
+
+    #[test]
+    fn sanity_check_list_licensees_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ListLicenseeResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize licensee list: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(paginated) => {
+                assert_eq!(paginated.limit, 1);
+                assert_eq!(paginated.offset, 0);
+                assert!(paginated.total >= 0);
+                assert!(paginated.count >= 0);
+                
+                if !paginated.value.licensees.is_empty() {
+                    let licensee = &paginated.value.licensees[0];
+                    assert_eq!(licensee.name(), "***MASKED***");
+                    assert_eq!(licensee.licensee_id(), "***MASKED***");
+                }
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
+}

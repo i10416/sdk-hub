@@ -352,12 +352,12 @@ impl<'a> ListResourceBundlesRequest<'a> {
 /// Resource object
 #[derive(Debug, Deserialize, Clone)]
 pub struct Resource {
-    resource_id: String,
     rid: String,
-    app_id: String,
+    aid: String,
     name: String,
     description: Option<String>,
     image_url: Option<String>,
+    purchase_url: Option<String>,
     resource_url: Option<String>,
     external_id: Option<String>,
     disabled: bool,
@@ -370,14 +370,12 @@ pub struct Resource {
     update_by: Option<String>,
     publish_date: Option<i64>,
     bundle_type: Option<String>,
-    is_fbia_resource: Option<bool>,
+    #[serde(default)]
+    is_fbia_resource: bool,
 }
 
 impl Resource {
-    /// Get the resource ID
-    pub fn resource_id(&self) -> &str {
-        &self.resource_id
-    }
+
 
     /// Get the resource RID
     pub fn rid(&self) -> &str {
@@ -386,7 +384,7 @@ impl Resource {
 
     /// Get the app ID
     pub fn app_id(&self) -> &str {
-        &self.app_id
+        &self.aid
     }
 
     /// Get the resource name
@@ -460,7 +458,7 @@ impl Resource {
     }
 
     /// Check if this is a FBIA resource
-    pub fn is_fbia_resource(&self) -> Option<bool> {
+    pub fn is_fbia_resource(&self) -> bool {
         self.is_fbia_resource
     }
 }
@@ -482,7 +480,7 @@ pub struct ResourceListResult {
 /// Response for resource count operations
 #[derive(Debug, Deserialize, Clone)]
 pub(super) struct ResourceCountResult {
-    pub count: i32,
+    pub data: i32,
 }
 
 // Helper function to serialize Vec<String> as comma-separated values
@@ -497,6 +495,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_create_resource_request_builder() {
@@ -532,9 +531,8 @@ mod tests {
     #[test]
     fn test_resource_deserialization() {
         let json = serde_json::json!({
-            "resource_id": "12345",
             "rid": "test_rid",
-            "app_id": "app123",
+            "aid": "app123",
             "name": "Test Resource",
             "description": "A test resource",
             "image_url": null,
@@ -554,11 +552,74 @@ mod tests {
 
         let resource: Resource =
             serde_json::from_value(json).expect("Failed to deserialize resource");
-        assert_eq!(resource.resource_id(), "12345");
         assert_eq!(resource.rid(), "test_rid");
         assert_eq!(resource.name(), "Test Resource");
         assert_eq!(resource.resource_type(), "article");
         assert!(!resource.is_disabled());
         assert!(!resource.is_deleted());
+    }
+
+    #[test]
+    fn sanity_check_list_resources_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ResourceListResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize resource list: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(paginated) => {
+                assert_eq!(paginated.limit, 1);
+                assert_eq!(paginated.offset, 0);
+                assert!(paginated.total >= 0);
+                assert!(paginated.count >= 0);
+                
+                if !paginated.value.resources.is_empty() {
+                    let resource = &paginated.value.resources[0];
+                    assert_eq!(resource.name(), "***MASKED***");
+                    assert_eq!(resource.rid(), "***MASKED***");
+                }
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
+
+    #[test]
+    fn sanity_check_count_resources_codec() {
+        let snapshot = include_str!("./count.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<ResourceCountResult>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize resource count: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(data) => {
+                assert!(data.data >= 0);
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
+
+    #[test]
+    fn sanity_check_get_resource_codec() {
+        let snapshot = include_str!("./get.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<ResourceResult>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize resource get: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(data) => {
+                assert_eq!(data.resource.name(), "***MASKED***");
+                assert_eq!(data.resource.rid(), "***MASKED***");
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
     }
 }

@@ -129,7 +129,7 @@ impl PianoAPI {
             .json::<PianoResponse<ResourceCountResult>>()
             .await?
             .value()?;
-        Ok(result.count)
+        Ok(result.data)
     }
 
     /// Attach resource to fixed bundle

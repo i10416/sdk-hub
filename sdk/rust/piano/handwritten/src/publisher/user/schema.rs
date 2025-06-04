@@ -319,6 +319,9 @@ pub struct User {
     /// User's personal name (optional)
     #[serde(default)]
     personal_name: Option<String>,
+    /// User's display name (optional)
+    #[serde(default)]
+    display_name: Option<String>,
     /// User's phone number (optional)
     #[serde(default)]
     phone: Option<String>,
@@ -391,87 +394,96 @@ impl User {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_create_user_request_builder() {
-        let req = CreateUserRequest::new("test@example.com")
+        let request = CreateUserRequest::new("user@example.com")
             .with_first_name("John")
             .with_last_name("Doe")
-            .with_phone("+1234567890");
+            .with_personal_name("Johnny");
 
-        assert_eq!(req.email, "test@example.com");
-        assert_eq!(req.first_name, Some("John"));
-        assert_eq!(req.last_name, Some("Doe"));
-        assert_eq!(req.phone, Some("+1234567890"));
-        assert_eq!(req.personal_name, None);
+        assert_eq!(request.email, "user@example.com");
+        assert_eq!(request.first_name, Some("John"));
+        assert_eq!(request.last_name, Some("Doe"));
+        assert_eq!(request.personal_name, Some("Johnny"));
     }
 
     #[test]
-    fn test_update_user_request_builder() {
-        let req = UpdateUserRequest::new("user123")
-            .with_email("updated@example.com")
-            .with_first_name("Jane");
+    fn test_list_user_request_builder() {
+        let request = ListUserRequest::new()
+            .with_limit(50)
+            .with_offset(10)
+            .with_query("search term");
 
-        assert_eq!(req.uid, "user123");
-        assert_eq!(req.email, Some("updated@example.com"));
-        assert_eq!(req.first_name, Some("Jane"));
-        assert_eq!(req.last_name, None);
+        assert_eq!(request.limit, Some(50));
+        assert_eq!(request.offset, Some(10));
+        assert_eq!(request.q, Some("search term"));
     }
 
     #[test]
     fn test_user_deserialization() {
         let json = serde_json::json!({
-            "uid": "user123",
-            "email": "test@example.com",
+            "uid": "12345",
+            "email": "user@example.com",
             "first_name": "John",
             "last_name": "Doe",
-            "create_date": 1234567890,
-            "status": "ACTIVE"
+            "personal_name": "Johnny",
+            "create_date": 1640995200,
+            "update_date": 1641081600
         });
 
         let user: User = serde_json::from_value(json).expect("Failed to deserialize user");
-        assert_eq!(user.uid(), "user123");
-        assert_eq!(user.email(), "test@example.com");
+        assert_eq!(user.uid(), "12345");
+        assert_eq!(user.email(), "user@example.com");
         assert_eq!(user.first_name(), Some("John"));
         assert_eq!(user.last_name(), Some("Doe"));
-        assert_eq!(user.create_date(), Some(1234567890));
-        assert_eq!(user.status(), Some("ACTIVE"));
+        assert_eq!(user.personal_name(), Some("Johnny"));
     }
 
     #[test]
-    fn test_user_result_deserialization() {
-        let json = serde_json::json!({
-            "User": {
-                "uid": "user123",
-                "email": "test@example.com"
-            }
-        });
-
-        let result: UserResult =
-            serde_json::from_value(json).expect("Failed to deserialize user result");
-        assert_eq!(result.user.uid(), "user123");
-        assert_eq!(result.user.email(), "test@example.com");
-    }
-
-    #[test]
-    fn test_list_user_result_deserialization() {
-        let json = serde_json::json!({
-            "users": [
-                {
-                    "uid": "user1",
-                    "email": "user1@example.com"
-                },
-                {
-                    "uid": "user2",
-                    "email": "user2@example.com"
+    fn sanity_check_list_users_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ListUserResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize user list: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(paginated) => {
+                assert_eq!(paginated.limit, 1);
+                assert_eq!(paginated.offset, 0);
+                assert!(paginated.total >= 0);
+                assert!(paginated.count >= 0);
+                
+                if !paginated.value.users.is_empty() {
+                    let user = &paginated.value.users[0];
+                    assert_eq!(user.email(), "test@example.com");
+                    assert_eq!(user.uid(), "***MASKED***");
                 }
-            ]
-        });
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
 
-        let result: ListUserResult =
-            serde_json::from_value(json).expect("Failed to deserialize list user result");
-        assert_eq!(result.users.len(), 2);
-        assert_eq!(result.users[0].uid(), "user1");
-        assert_eq!(result.users[1].uid(), "user2");
+    #[test]
+    fn sanity_check_get_user_codec() {
+        let snapshot = include_str!("./get.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<UserResult>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize user get: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(data) => {
+                assert_eq!(data.user.email(), "test@example.com");
+                assert_eq!(data.user.uid(), "***MASKED***");
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
     }
 }

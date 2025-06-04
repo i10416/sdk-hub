@@ -76,7 +76,7 @@ impl PianoAPI {
             .json::<PianoResponse<PromotionCodeCountResult>>()
             .await?
             .value()?;
-        Ok(result.count)
+        Ok(result.data)
     }
 
     /// Delete promo code

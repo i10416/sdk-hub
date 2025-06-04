@@ -1,0 +1,28 @@
+{
+  "code": 0,
+  "ts": 1749012995,
+  "limit": 1,
+  "offset": 0,
+  "total": 1,
+  "count": 1,
+  "resources": [
+    {
+      "rid": "***MASKED***",
+      "aid": "***MASKED***",
+      "deleted": false,
+      "disabled": false,
+      "create_date": 1626765829,
+      "update_date": 1633503201,
+      "publish_date": 1626765829,
+      "name": "***MASKED***",
+      "description": "***MASKED***",
+      "image_url": null,
+      "type": "standard",
+      "type_label": "Standard",
+      "purchase_url": null,
+      "resource_url": null,
+      "external_id": "***MASKED***",
+      "is_fbia_resource": false
+    }
+  ]
+}

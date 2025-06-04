@@ -1,0 +1,36 @@
+{
+  "code": 0,
+  "ts": 1749012956,
+  "limit": 1,
+  "offset": 0,
+  "total": 2427,
+  "count": 1,
+  "licensees": [
+    {
+      "aid": "***MASKED***",
+      "licensee_id": "***MASKED***",
+      "name": "***MASKED***",
+      "description": "***MASKED***",
+      "logo_url": null,
+      "representatives": [
+        {
+          "email": "test@example.com"
+        },
+        {
+          "email": "test@example.com"
+        },
+        {
+          "email": "test@example.com"
+        }
+      ],
+      "managers": [
+        {
+          "uid": "***MASKED***",
+          "first_name": "***MASKED***",
+          "last_name": "***MASKED***",
+          "personal_name": "***MASKED***"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-
+use crate::publisher::user::User;
 /// Request to list promotion codes
 #[derive(Debug, Serialize, Default)]
 pub struct ListPromotionCodeRequest<'a> {
@@ -145,24 +145,28 @@ impl<'a> DeletePromotionCodeRequest<'a> {
 /// Promotion code object
 #[derive(Debug, Deserialize, Clone)]
 pub struct PromotionCode {
-    promotion_code_id: String,
+    promo_code_id: String,
     promotion_id: String,
-    app_id: String,
     code: String,
+    assigned_email: Option<String>,
+    reserve_date: Option<i64>,
     state: String,
-    uses: i32,
+    state_value: Option<String>,
     create_date: i64,
     create_by: Option<String>,
     update_date: Option<i64>,
     update_by: Option<String>,
-    use_date: Option<i64>,
-    user_id: Option<String>,
+    #[serde(default)]
+    deleted: bool,
+    claimed_date: Option<i64>,
+    last_original_price: Option<String>,
+    claimed_user: Option<User>,
 }
 
 impl PromotionCode {
     /// Get the promotion code ID
     pub fn promotion_code_id(&self) -> &str {
-        &self.promotion_code_id
+        &self.promo_code_id
     }
 
     /// Get the promotion ID
@@ -170,10 +174,7 @@ impl PromotionCode {
         &self.promotion_id
     }
 
-    /// Get the app ID
-    pub fn app_id(&self) -> &str {
-        &self.app_id
-    }
+
 
     /// Get the code
     pub fn code(&self) -> &str {
@@ -185,10 +186,6 @@ impl PromotionCode {
         &self.state
     }
 
-    /// Get the number of uses
-    pub fn uses(&self) -> i32 {
-        self.uses
-    }
 
     /// Get the creation date
     pub fn create_date(&self) -> i64 {
@@ -210,15 +207,6 @@ impl PromotionCode {
         self.update_by.as_deref()
     }
 
-    /// Get the use date
-    pub fn use_date(&self) -> Option<i64> {
-        self.use_date
-    }
-
-    /// Get the user ID
-    pub fn user_id(&self) -> Option<&str> {
-        self.user_id.as_deref()
-    }
 }
 
 /// Response wrapper for promotion code operations
@@ -231,19 +219,20 @@ pub(super) struct PromotionCodeResult {
 /// Response for promotion code list operations
 #[derive(Debug, Deserialize, Clone)]
 pub struct PromotionCodeListResult {
-    #[serde(alias = "promo_codes")]
+    #[serde(alias = "data")]
     pub promo_codes: Vec<PromotionCode>,
 }
 
 /// Response for promotion code count operations
 #[derive(Debug, Deserialize, Clone)]
 pub(super) struct PromotionCodeCountResult {
-    pub count: i32,
+    pub data: i32,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_list_promotion_code_request_builder() {
@@ -292,12 +281,10 @@ mod tests {
     #[test]
     fn test_promotion_code_deserialization() {
         let json = serde_json::json!({
-            "promotion_code_id": "12345",
+            "promo_code_id": "12345",
             "promotion_id": "promo123",
-            "app_id": "app123",
             "code": "SAVE10",
             "state": "active",
-            "uses": 0,
             "create_date": 1640995200,
             "create_by": "user123",
             "update_date": 1641081600,
@@ -312,6 +299,34 @@ mod tests {
         assert_eq!(code.promotion_id(), "promo123");
         assert_eq!(code.code(), "SAVE10");
         assert_eq!(code.state(), "active");
-        assert_eq!(code.uses(), 0);
+    }
+
+    #[test]
+    fn sanity_check_list_promotion_codes_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<crate::PianoResponse<crate::PianoPaginated<PromotionCodeListResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize promotion code list: {:?}", value.err());
+
+        let paginated = value.unwrap().value().unwrap();
+        assert_eq!(paginated.limit, 1);
+        assert_eq!(paginated.offset, 0);
+        assert!(paginated.total >= 0);
+        assert!(paginated.count >= 0);
+        
+        if !paginated.value.promo_codes.is_empty() {
+            let promo_code = &paginated.value.promo_codes[0];
+            assert_eq!(promo_code.code(), "***MASKED***");
+            assert_eq!(promo_code.promotion_code_id(), "***MASKED***");
+            assert_eq!(promo_code.promotion_id(), "***MASKED***");
+        }
+    }
+
+    #[test]
+    fn sanity_check_count_promotion_codes_codec() {
+        let snapshot = include_str!("./count.schema.snapshot.json");
+        let value = serde_json::from_str::<crate::PianoResponse<PromotionCodeCountResult>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize promotion code count: {:?}", value.err());
     }
 }

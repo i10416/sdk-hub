@@ -332,6 +332,7 @@ impl AccessGrant {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_grant_access_request_builder() {
@@ -455,4 +456,31 @@ mod tests {
         assert_eq!(result.access_grants[0].access_grant_id(), "grant1");
         assert_eq!(result.access_grants[1].access_grant_id(), "grant2");
     }
+
+    #[test]
+    fn test_create_access_request_builder() {
+        let request = GrantAccessRequest::new("user123", "resource456")
+            .with_expires(1999999999)
+            .with_custom_params(r#"{"source": "subscription"}"#);
+
+        assert_eq!(request.uid, "user123");
+        assert_eq!(request.resource_id, "resource456");
+        assert_eq!(request.expires, Some(1999999999));
+        assert_eq!(request.custom_params, Some(r#"{"source": "subscription"}"#));
+    }
+
+    #[test]
+    fn test_list_access_request_builder() {
+        let request = ListAccessRequest::new()
+            .with_limit(50)
+            .with_offset(10)
+            .with_resource_type("article")
+            .with_status("active");
+
+        assert_eq!(request.limit, Some(50));
+        assert_eq!(request.offset, Some(10));
+        assert_eq!(request.resource_type, Some("article"));
+        assert_eq!(request.status, Some("active"));
+    }
+
 }

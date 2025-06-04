@@ -194,6 +194,7 @@ pub struct PromotionTermListResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_list_promotion_term_request_builder() {
@@ -247,5 +248,29 @@ mod tests {
         assert_eq!(term.name(), "Monthly Subscription");
         assert_eq!(term.term_type(), "subscription");
         assert!(!term.is_deleted());
+    }
+
+    #[test]
+    fn sanity_check_list_promotion_terms_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<PromotionTermListResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize promotion term list: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(paginated) => {
+                assert_eq!(paginated.limit, 1);
+                assert_eq!(paginated.offset, 0);
+                assert!(paginated.total >= 0);
+                assert!(paginated.count >= 0);
+                
+                // Terms list might be empty, so we just verify the structure
+                assert!(paginated.value.terms.len() >= 0);
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
     }
 }

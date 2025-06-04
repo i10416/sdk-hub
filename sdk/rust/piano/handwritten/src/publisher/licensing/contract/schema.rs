@@ -92,7 +92,8 @@ impl Contract {
 
 #[cfg(test)]
 mod tests {
-    use super::ListContractResult;
+    use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn sanity_check_list_deserialization() {

@@ -237,13 +237,9 @@ impl ListTagBundlesRequest {
 #[derive(Debug, Deserialize, Clone)]
 pub struct ResourceTag {
     resource_tag_id: String,
-    app_id: String,
     name: String,
-    description: Option<String>,
-    create_date: i64,
-    create_by: Option<String>,
-    update_date: Option<i64>,
-    update_by: Option<String>,
+    #[serde(rename = "type")]
+    ty: String,
 }
 
 impl ResourceTag {
@@ -253,8 +249,8 @@ impl ResourceTag {
     }
 
     /// Get the app ID
-    pub fn app_id(&self) -> &str {
-        &self.app_id
+    pub fn type_name(&self) -> &str {
+        &self.ty
     }
 
     /// Get the resource tag name
@@ -262,30 +258,6 @@ impl ResourceTag {
         &self.name
     }
 
-    /// Get the resource tag description
-    pub fn description(&self) -> Option<&str> {
-        self.description.as_deref()
-    }
-
-    /// Get the creation date
-    pub fn create_date(&self) -> i64 {
-        self.create_date
-    }
-
-    /// Get the creator
-    pub fn create_by(&self) -> Option<&str> {
-        self.create_by.as_deref()
-    }
-
-    /// Get the update date
-    pub fn update_date(&self) -> Option<i64> {
-        self.update_date
-    }
-
-    /// Get the updater
-    pub fn update_by(&self) -> Option<&str> {
-        self.update_by.as_deref()
-    }
 }
 
 /// Response wrapper for resource tag operations
@@ -314,6 +286,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoResponse, PianoPaginated};
 
     #[test]
     fn test_create_resource_tag_request_builder() {
@@ -341,20 +314,41 @@ mod tests {
     fn test_resource_tag_deserialization() {
         let json = serde_json::json!({
             "resource_tag_id": "12345",
-            "app_id": "app123",
             "name": "Test Tag",
-            "description": "A test tag",
-            "create_date": 1640995200,
-            "create_by": "user123",
-            "update_date": 1641081600,
-            "update_by": "user456"
+            "type": "Standard"
         });
 
         let tag: ResourceTag =
             serde_json::from_value(json).expect("Failed to deserialize resource tag");
         assert_eq!(tag.resource_tag_id(), "12345");
-        assert_eq!(tag.app_id(), "app123");
+        assert_eq!(tag.type_name(), "Standard");
         assert_eq!(tag.name(), "Test Tag");
-        assert_eq!(tag.description(), Some("A test tag"));
+    }
+
+    #[test]
+    fn sanity_check_list_resource_tags_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ResourceTagListResult>>>(snapshot);
+        
+        assert!(value.is_ok(), "Failed to deserialize resource tag list: {:?}", value.err());
+        let response = value.unwrap();
+        
+        match response {
+            PianoResponse::Succeed(paginated) => {
+                assert_eq!(paginated.limit, 1);
+                assert_eq!(paginated.offset, 0);
+                assert!(paginated.total >= 0);
+                assert!(paginated.count >= 0);
+                
+                if !paginated.value.resource_tags.is_empty() {
+                    let tag = &paginated.value.resource_tags[0];
+                    assert_eq!(tag.name(), "***MASKED***");
+                    assert_eq!(tag.resource_tag_id(), "***MASKED***");
+                }
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
     }
 }

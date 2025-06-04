@@ -1,0 +1,36 @@
+{
+  "code": 0,
+  "ts": 1749013061,
+  "limit": 1,
+  "offset": 0,
+  "total": 1000,
+  "count": 1,
+  "data": [
+    {
+      "promo_code_id": "***MASKED***",
+      "promotion_id": "***MASKED***",
+      "code": "***MASKED***",
+      "assigned_email": "test@example.com",
+      "reserve_date": 1675833992,
+      "state": "Used",
+      "state_value": "used",
+      "create_date": 1675327057,
+      "create_by": "***MASKED***",
+      "update_date": 1675327057,
+      "update_by": "***MASKED***",
+      "deleted": false,
+      "claimed_date": 1675834003,
+      "last_original_price": "$17.99",
+      "claimed_user": {
+        "first_name": "***MASKED***",
+        "last_name": "***MASKED***",
+        "personal_name": "***MASKED***",
+        "email": "test@example.com",
+        "uid": "***MASKED***",
+        "image1": null,
+        "create_date": 1675833982,
+        "display_name": "***MASKED***"
+      }
+    }
+  ]
+}

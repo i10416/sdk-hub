@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "ts": 1749012911,
+  "resource": {
+    "rid": "***MASKED***",
+    "aid": "***MASKED***",
+    "deleted": false,
+    "disabled": false,
+    "create_date": 1626765902,
+    "update_date": 1633503181,
+    "publish_date": 1626765902,
+    "name": "***MASKED***",
+    "description": "***MASKED***",
+    "image_url": null,
+    "type": "bundle",
+    "type_label": "Bundle",
+    "purchase_url": null,
+    "resource_url": null,
+    "external_id": "***MASKED***",
+    "is_fbia_resource": false,
+    "bundle_type": "tagged",
+    "bundle_type_label": "Tagged"
+  }
+}

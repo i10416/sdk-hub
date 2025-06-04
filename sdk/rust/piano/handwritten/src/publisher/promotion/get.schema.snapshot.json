@@ -1,0 +1,29 @@
+{
+  "code": 0,
+  "ts": 1749012865,
+  "promotion": {
+    "aid": "***MASKED***",
+    "promotion_id": "***MASKED***",
+    "name": "***MASKED***",
+    "new_customers_only": false,
+    "percentage_discount": 100.0,
+    "discount_type": "percentage",
+    "uses_allowed": 1000,
+    "uses": 3,
+    "never_allow_zero": false,
+    "create_date": 1675326953,
+    "create_by": "***MASKED***",
+    "update_date": 1676536983,
+    "update_by": "***MASKED***",
+    "deleted": false,
+    "fixed_promotion_code": "***MASKED***",
+    "unlimited_uses": false,
+    "promotion_code_prefix": "***MASKED***",
+    "term_dependency_type": "all",
+    "status": "active",
+    "fixed_discount_list": [],
+    "apply_to_all_billing_periods": false,
+    "can_be_applied_on_renewal": false,
+    "billing_period_limit": 1
+  }
+}
