@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValue {
     #[serde(default)]
@@ -17,6 +17,33 @@ pub struct PropertyValue {
     persistence_timestamp: u64,
 }
 impl PropertyValue {
+    pub fn new(
+        versions: &[PropertyValueVersion],
+        value: &str,
+        source: &str,
+        timestamp: u64,
+        source_id: &str,
+        request_id: &str,
+        source_upstream_deployable: &str,
+        is_encrypted: bool,
+        sensitivity_level: &str,
+        updated_by_user_id: i32,
+        persistence_timestamp: u64,
+    ) -> Self {
+        Self {
+            versions: versions.to_vec(),
+            value: value.to_string(),
+            source: source.to_string(),
+            timestamp,
+            source_id: source_id.to_string(),
+            request_id: request_id.to_string(),
+            source_upstream_deployable: source_upstream_deployable.to_string(),
+            is_encrypted,
+            sensitivity_level: sensitivity_level.to_string(),
+            updated_by_user_id,
+            persistence_timestamp,
+        }
+    }
     pub fn versions(&self) -> &Vec<PropertyValueVersion> {
         &self.versions
     }
@@ -53,7 +80,7 @@ impl PropertyValue {
     }
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValueVersion {
     name: String,
