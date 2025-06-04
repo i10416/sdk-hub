@@ -154,14 +154,8 @@ impl<'a> RemoveContractIpRangeRequest<'a> {
 #[derive(Debug, Deserialize, Clone)]
 pub struct ContractIpRange {
     contract_ip_range_id: String,
-    contract_id: String,
-    ip_range_start: String,
-    ip_range_end: String,
-    description: Option<String>,
-    create_date: i64,
-    create_by: Option<String>,
-    update_date: Option<i64>,
-    update_by: Option<String>,
+    status: String,
+    ip_range: String,
 }
 
 impl ContractIpRange {
@@ -170,44 +164,14 @@ impl ContractIpRange {
         &self.contract_ip_range_id
     }
 
-    /// Get the contract ID
-    pub fn contract_id(&self) -> &str {
-        &self.contract_id
+    /// Get the IP range
+    pub fn ip_range(&self) -> &str {
+        &self.ip_range
     }
 
-    /// Get the IP range start
-    pub fn ip_range_start(&self) -> &str {
-        &self.ip_range_start
-    }
-
-    /// Get the IP range end
-    pub fn ip_range_end(&self) -> &str {
-        &self.ip_range_end
-    }
-
-    /// Get the description
-    pub fn description(&self) -> Option<&str> {
-        self.description.as_deref()
-    }
-
-    /// Get the creation date
-    pub fn create_date(&self) -> i64 {
-        self.create_date
-    }
-
-    /// Get the creator
-    pub fn create_by(&self) -> Option<&str> {
-        self.create_by.as_deref()
-    }
-
-    /// Get the update date
-    pub fn update_date(&self) -> Option<i64> {
-        self.update_date
-    }
-
-    /// Get the updater
-    pub fn update_by(&self) -> Option<&str> {
-        self.update_by.as_deref()
+    /// Get the status
+    pub fn status(&self) -> &str {
+        &self.status
     }
 }
 
@@ -221,34 +185,53 @@ pub(super) struct ContractIpRangeResult {
 /// Response for contract IP range list operations
 #[derive(Debug, Deserialize, Clone)]
 pub struct ContractIpRangeListResult {
-    #[serde(alias = "contract_ip_ranges")]
+    #[serde(alias = "contract_ip_range_list")]
     pub contract_ip_ranges: Vec<ContractIpRange>,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_create_contract_ip_range_request() {
         let request =
-            CreateContractIpRangeRequest::new("contract123", "192.168.1.1", "192.168.1.255")
-                .with_description("Office network");
+            CreateContractIpRangeRequest::new("contract123", "192.168.1.0", "192.168.1.255")
+                .with_description("Test IP range");
 
         assert_eq!(request.contract_id, "contract123");
-        assert_eq!(request.ip_range_start, "192.168.1.1");
+        assert_eq!(request.ip_range_start, "192.168.1.0");
         assert_eq!(request.ip_range_end, "192.168.1.255");
-        assert_eq!(request.description, Some("Office network"));
+        assert_eq!(request.description, Some("Test IP range"));
     }
 
     #[test]
     fn test_list_contract_ip_range_request() {
         let request = ListContractIpRangeRequest::new("contract123")
-            .with_limit(50)
-            .with_offset(10);
+            .with_limit(10)
+            .with_offset(0)
+            .with_order_by("create_date")
+            .with_order_direction("desc");
 
         assert_eq!(request.contract_id, "contract123");
-        assert_eq!(request.limit, Some(50));
-        assert_eq!(request.offset, Some(10));
+        assert_eq!(request.limit, Some(10));
+        assert_eq!(request.offset, Some(0));
+        assert_eq!(request.order_by, Some("create_date".to_string()));
+        assert_eq!(request.order_direction, Some("desc".to_string()));
+    }
+
+    #[test]
+    fn sanity_check_list_contract_ip_range_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ContractIpRangeListResult>>>(
+            snapshot,
+        );
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract IP range list: {:?}",
+            value.err()
+        );
     }
 }

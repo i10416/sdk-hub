@@ -257,7 +257,6 @@ impl ResourceTag {
     pub fn name(&self) -> &str {
         &self.name
     }
-
 }
 
 /// Response wrapper for resource tag operations
@@ -286,7 +285,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_create_resource_tag_request_builder() {
@@ -328,18 +327,23 @@ mod tests {
     #[test]
     fn sanity_check_list_resource_tags_codec() {
         let snapshot = include_str!("./list.schema.snapshot.json");
-        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ResourceTagListResult>>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize resource tag list: {:?}", value.err());
+        let value =
+            serde_json::from_str::<PianoResponse<PianoPaginated<ResourceTagListResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize resource tag list: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
                 assert!(paginated.total >= 0);
                 assert!(paginated.count >= 0);
-                
+
                 if !paginated.value.resource_tags.is_empty() {
                     let tag = &paginated.value.resource_tags[0];
                     assert_eq!(tag.name(), "***MASKED***");

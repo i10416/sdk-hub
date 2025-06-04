@@ -91,4 +91,17 @@ mod tests {
             serde_json::from_value::<PianoResponse<PianoPaginated<ContractUserListResult>>>(value);
         assert!(result.is_ok())
     }
+
+    #[test]
+    fn sanity_check_list_contract_user_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value =
+            serde_json::from_str::<PianoResponse<PianoPaginated<ContractUserListResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract user list: {:?}",
+            value.err()
+        );
+    }
 }

@@ -230,7 +230,7 @@ pub struct GeneratePromotionResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_create_promotion_request() {
@@ -251,18 +251,23 @@ mod tests {
     #[test]
     fn sanity_check_list_promotions_codec() {
         let snapshot = include_str!("./list.schema.snapshot.json");
-        let value = serde_json::from_str::<crate::PianoResponse<crate::PianoPaginated<PromotionListResult>>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize promotion list: {:?}", value.err());
+        let value = serde_json::from_str::<
+            crate::PianoResponse<crate::PianoPaginated<PromotionListResult>>,
+        >(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize promotion list: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
-        
+
         let paginated = response.value().unwrap();
         assert_eq!(paginated.limit, 1);
         assert_eq!(paginated.offset, 0);
         assert!(paginated.total >= 0);
         assert!(paginated.count >= 0);
-        
+
         if !paginated.value.promotions.is_empty() {
             let promotion = &paginated.value.promotions[0];
             assert_eq!(promotion.name(), "***MASKED***");
@@ -274,10 +279,10 @@ mod tests {
     // fn sanity_check_count_promotions_codec() {
     //     let snapshot = include_str!("./count.schema.snapshot.json");
     //     let value = serde_json::from_str::<crate::PianoResponse<i32>>(snapshot);
-        
+
     //     assert!(value.is_ok(), "Failed to deserialize promotion count: {:?}", value.err());
     //     let response = value.unwrap();
-        
+
     //     assert_eq!(response.code, 0);
     //     assert!(response.ts > 0);
     //     assert!(response.data >= 0);
@@ -287,10 +292,14 @@ mod tests {
     fn sanity_check_get_promotion_codec() {
         let snapshot = include_str!("./get.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<PromotionResult>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize promotion get: {:?}", value.err());
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize promotion get: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(data) => {
                 assert_eq!(data.promotion.name(), "***MASKED***");

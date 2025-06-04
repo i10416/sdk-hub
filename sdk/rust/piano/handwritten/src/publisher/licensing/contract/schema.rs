@@ -93,7 +93,7 @@ impl Contract {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn sanity_check_list_deserialization() {
@@ -138,5 +138,30 @@ mod tests {
         });
         let result = serde_json::from_value::<ListContractResult>(value);
         assert!(result.is_ok())
+    }
+
+    #[test]
+    fn sanity_check_list_contract_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value =
+            serde_json::from_str::<PianoResponse<PianoPaginated<ListContractResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract list: {:?}",
+            value.err()
+        );
+    }
+
+    #[test]
+    fn sanity_check_get_contract_codec() {
+        let snapshot = include_str!("./get.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<ContractResult>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract get: {:?}",
+            value.err()
+        );
     }
 }

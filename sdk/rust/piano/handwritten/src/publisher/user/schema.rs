@@ -394,7 +394,7 @@ impl User {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_create_user_request_builder() {
@@ -445,17 +445,21 @@ mod tests {
     fn sanity_check_list_users_codec() {
         let snapshot = include_str!("./list.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<PianoPaginated<ListUserResult>>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize user list: {:?}", value.err());
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize user list: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
                 assert!(paginated.total >= 0);
                 assert!(paginated.count >= 0);
-                
+
                 if !paginated.value.users.is_empty() {
                     let user = &paginated.value.users[0];
                     assert_eq!(user.email(), "test@example.com");
@@ -472,10 +476,14 @@ mod tests {
     fn sanity_check_get_user_codec() {
         let snapshot = include_str!("./get.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<UserResult>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize user get: {:?}", value.err());
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize user get: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(data) => {
                 assert_eq!(data.user.email(), "test@example.com");

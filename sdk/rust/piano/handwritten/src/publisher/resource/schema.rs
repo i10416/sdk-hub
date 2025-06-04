@@ -375,8 +375,6 @@ pub struct Resource {
 }
 
 impl Resource {
-
-
     /// Get the resource RID
     pub fn rid(&self) -> &str {
         &self.rid
@@ -495,7 +493,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_create_resource_request_builder() {
@@ -562,18 +560,23 @@ mod tests {
     #[test]
     fn sanity_check_list_resources_codec() {
         let snapshot = include_str!("./list.schema.snapshot.json");
-        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ResourceListResult>>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize resource list: {:?}", value.err());
+        let value =
+            serde_json::from_str::<PianoResponse<PianoPaginated<ResourceListResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize resource list: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
                 assert!(paginated.total >= 0);
                 assert!(paginated.count >= 0);
-                
+
                 if !paginated.value.resources.is_empty() {
                     let resource = &paginated.value.resources[0];
                     assert_eq!(resource.name(), "***MASKED***");
@@ -590,10 +593,14 @@ mod tests {
     fn sanity_check_count_resources_codec() {
         let snapshot = include_str!("./count.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<ResourceCountResult>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize resource count: {:?}", value.err());
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize resource count: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(data) => {
                 assert!(data.data >= 0);
@@ -608,10 +615,14 @@ mod tests {
     fn sanity_check_get_resource_codec() {
         let snapshot = include_str!("./get.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<ResourceResult>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize resource get: {:?}", value.err());
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize resource get: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(data) => {
                 assert_eq!(data.resource.name(), "***MASKED***");

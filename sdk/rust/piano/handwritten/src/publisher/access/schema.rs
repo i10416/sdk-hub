@@ -332,7 +332,7 @@ impl AccessGrant {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_grant_access_request_builder() {
@@ -482,5 +482,4 @@ mod tests {
         assert_eq!(request.resource_type, Some("article"));
         assert_eq!(request.status, Some("active"));
     }
-
 }

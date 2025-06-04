@@ -51,30 +51,21 @@ mod tests {
             "periods": []
         });
 
-        let schedule: Schedule = serde_json::from_value(json).expect("Failed to deserialize schedule");
+        let schedule: Schedule =
+            serde_json::from_value(json).expect("Failed to deserialize schedule");
         assert_eq!(schedule.schedule_id(), "12345");
         assert_eq!(schedule.periods().len(), 0);
     }
 
-    // Note: Snapshot file doesn't exist, commenting out this test
-    /*
     #[test]
     fn sanity_check_get_schedule_codec() {
-        let snapshot = include_str!("./get.schema.snapshot.json");
+        let snapshot = include_str!("../licensing/schedule/get.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<ScheduleResult>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize schedule get: {:?}", value.err());
-        let response = value.unwrap();
-        
-        match response {
-            PianoResponse::Succeed(data) => {
-                assert_eq!(data.schedule.schedule_id(), "***MASKED***");
-                assert_eq!(data.schedule.name(), "***MASKED***");
-            }
-            PianoResponse::Failure { code, message, .. } => {
-                panic!("Expected success but got failure: {} - {}", code, message);
-            }
-        }
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize schedule get: {:?}",
+            value.err()
+        );
     }
-    */
 }

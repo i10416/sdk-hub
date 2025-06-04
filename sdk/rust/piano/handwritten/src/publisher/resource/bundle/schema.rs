@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Request to list bundle members
 #[derive(Debug, Serialize, Default)]
@@ -77,8 +77,6 @@ pub struct BundleMember {
 }
 
 impl BundleMember {
-
-
     /// Get the RID
     pub fn rid(&self) -> &str {
         &self.rid
@@ -114,7 +112,7 @@ pub struct BundleMemberListResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoResponse, PianoPaginated};
+    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_list_bundle_members_request_builder() {
@@ -164,18 +162,23 @@ mod tests {
     #[test]
     fn sanity_check_list_bundle_members_codec() {
         let snapshot = include_str!("./members.schema.snapshot.json");
-        let value = serde_json::from_str::<PianoResponse<PianoPaginated<BundleMemberListResult>>>(snapshot);
-        
-        assert!(value.is_ok(), "Failed to deserialize bundle member list: {:?}", value.err());
+        let value =
+            serde_json::from_str::<PianoResponse<PianoPaginated<BundleMemberListResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize bundle member list: {:?}",
+            value.err()
+        );
         let response = value.unwrap();
-        
+
         match response {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
                 assert!(paginated.total >= 0);
                 assert!(paginated.count >= 0);
-                
+
                 if !paginated.value.resources.is_empty() {
                     let member = &paginated.value.resources[0];
                     assert_eq!(member.name(), "***MASKED***");

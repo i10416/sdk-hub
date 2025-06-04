@@ -98,3 +98,23 @@ pub struct ContractDomain {
     pub contract_users_count: usize,
     pub active_contract_users_count: usize,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{PianoPaginated, PianoResponse};
+
+    #[test]
+    fn sanity_check_list_contract_domain_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<ContractDomainListResult>>>(
+            snapshot,
+        );
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract domain list: {:?}",
+            value.err()
+        );
+    }
+}
