@@ -57,12 +57,13 @@ pub enum PianoResponse<T> {
     },
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, PartialEq, Deserialize, Clone)]
 pub struct Empty {
     #[serde(deserialize_with = "piano_code_from_usize")]
     code: PianoCode,
 }
-#[derive(Debug, Deserialize, PartialEq)]
+
+#[derive(Debug, PartialEq, Clone)]
 pub enum PianoCode {
     Successful,
 }
@@ -123,6 +124,8 @@ impl<T: Clone> PianoResponse<T> {
                     61028 => Ok(None),
                     // contract ip domain not found
                     61035 => Ok(None),
+                    // user not found
+                    2004 => Ok(None),
                     61027 => Result::Err(Box::new(std::io::Error::new(
                         ErrorKind::AlreadyExists,
                         format!("{code}: {message}"),
