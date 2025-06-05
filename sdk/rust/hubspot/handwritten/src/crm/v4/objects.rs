@@ -6,14 +6,8 @@ use std::io::ErrorKind;
 use reqwest::StatusCode;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use crate::crm::prelude::Association;
+use crate::crm::prelude::{Association, Object};
 
-// Resource type
-#[derive(Debug, Deserialize)]
-pub struct Object<T> {
-    pub id: String,
-    pub properties: T,
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectProperties {

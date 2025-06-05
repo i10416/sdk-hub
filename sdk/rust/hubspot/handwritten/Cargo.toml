@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [features]
-default = ["rustls", "crm-v3", "crm-v4", "tracing"]
+default = ["rustls", "crm-v3", "crm-v4", "workflow", "tracing"]
 crm-v3 = []
 crm-v4 = []
+workflow = []
 tracing = ["dep:tracing"]
 native-tls = ["reqwest/default-tls"]
 rustls = ["reqwest/rustls-tls"]

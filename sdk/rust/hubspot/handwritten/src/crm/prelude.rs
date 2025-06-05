@@ -3,18 +3,15 @@ use serde::{Deserialize, Serialize};
 // Resource type
 #[derive(Debug, Deserialize, Clone)]
 pub struct Object<T> {
-    #[serde(rename = "objectType")]
-    pub object_type: String,
-    #[serde(rename = "objectId")]
-    pub object_id: u64,
-    #[serde(default)]
-    pub id:Option<String>,
-    #[serde(rename = "objectTypeId")]
-    pub object_type_id: String,
+    pub id: String,
     pub properties: T,
     #[serde(default)]
-    #[serde(rename = "is_deleted")]
-    pub is_deleted: bool,
+    pub archived: bool,
+}
+impl <T> Object<T> {
+    pub fn object_id(&self) -> &str {
+        &self.id
+    }
 }
 
 // List type

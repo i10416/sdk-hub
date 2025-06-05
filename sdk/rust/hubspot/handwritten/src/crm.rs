@@ -6,3 +6,5 @@ pub mod prelude;
 pub mod v3;
 #[cfg(feature = "crm-v4")]
 pub mod v4;
+#[cfg(feature = "workflow")]
+pub mod workflow;
