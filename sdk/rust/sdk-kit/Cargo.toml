@@ -1,0 +1,23 @@
+[workspace]
+members = [
+    "crates/mirrors",
+    "crates/derive",
+    "crates/derive_internal",
+    "crates/tests"
+]
+resolver = "2"
+
+[workspace.package]
+name = "sdk-kit"
+version = "0.1.2"
+edition = "2021"
+description = "API development toolkit for Rust"
+documentation = "https://github.com/i10416/sdk-hub/tree/main/sdk/rust/sdk-kit"
+rust-version = "1.83"
+authors = ["i10416"]
+license = "MIT"
+keywords = ["api"]
+categories = ["api-development"]
+
+
+

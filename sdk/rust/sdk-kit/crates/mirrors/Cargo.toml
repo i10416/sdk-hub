@@ -1,0 +1,18 @@
+[package]
+name = "mirrors"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Trait to extract structural information from types"
+
+[lib]
+
+
+[features]
+default = ["derive"]
+derive = ["dep:mirrors_derive"]
+
+[dependencies]
+mirrors_derive = { path = "../derive", optional = true }
