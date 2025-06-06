@@ -2,6 +2,9 @@
 
 A Rust SDK for the Piano API, providing easy-to-use interfaces for user management, access control, licensing, and subscription management.
 
+This crate is tested against real data to check spec conformance using the response snapshot from read operations.
+These tests can be found at schema.rs and `*.snapshot.json`.
+
 ## Quick Start
 
 ### Prerequisites
