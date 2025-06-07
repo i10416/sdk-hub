@@ -1,6 +1,6 @@
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
-pub struct ActivatePeriodRequest {
-    pub schedule_id: String,
+pub struct ActivatePeriodRequest<'a> {
+    pub schedule_id: &'a str,
 }

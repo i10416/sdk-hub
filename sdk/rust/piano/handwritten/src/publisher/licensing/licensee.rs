@@ -5,9 +5,9 @@ use crate::{PianoAPI, PianoPaginated, PianoRequest, PianoResponse};
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn list_licensees(
+    pub async fn list_licensees<'a>(
         &self,
-        params: &ListLicenseeRequest,
+        params: &ListLicenseeRequest<'a>,
     ) -> Result<PianoPaginated<ListLicenseeResult>, crate::Error> {
         let result = self
             .client
@@ -36,11 +36,12 @@ impl PianoAPI {
             .map(|email| Representative::new(email))
             .collect::<Vec<_>>();
         let representatives = serde_json::to_string(&representatives).ok();
+        let manager_uids = uids.to_vec().join(",");
         let req = CreateLicenseeRequest {
-            app_id: self.app_id.to_string(),
-            manager_uids: uids.to_vec().join(","),
-            name: name.to_string(),
-            representatives: representatives,
+            app_id: &self.app_id,
+            manager_uids: &manager_uids,
+            name,
+            representatives: representatives.as_deref(),
         };
         let result = self
             .client
@@ -69,11 +70,12 @@ impl PianoAPI {
             .map(|email| Representative::new(email))
             .collect::<Vec<_>>();
         let representatives = serde_json::to_string(&representatives).ok();
+        let manager_uids = uids.to_vec().join(",");
         let inner = UpdateLicenseeRequest {
-            licensee_id: licensee_id.to_string(),
-            manager_uids: uids.to_vec().join(","),
-            name: name.to_string(),
-            representatives,
+            licensee_id,
+            manager_uids: &manager_uids,
+            name,
+            representatives: representatives.as_deref(),
         };
         let result = self
             .client

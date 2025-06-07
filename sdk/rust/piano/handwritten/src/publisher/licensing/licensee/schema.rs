@@ -1,32 +1,31 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
-pub(super) struct CreateLicenseeRequest {
+pub(super) struct CreateLicenseeRequest<'a> {
     #[serde(rename = "aid")]
-    pub app_id: String,
-    pub manager_uids: String,
-    pub name: String,
+    pub app_id: &'a str,
+    pub manager_uids: &'a str,
+    pub name: &'a str,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub representatives: Option<String>,
+    pub representatives: Option<&'a str>,
 }
 
 #[derive(Debug, Serialize)]
-pub struct UpdateLicenseeRequest {
-    pub licensee_id: String,
-    pub manager_uids: String,
-    pub name: String,
-    pub representatives: Option<String>,
+pub struct UpdateLicenseeRequest<'a> {
+    pub licensee_id: &'a str,
+    pub manager_uids: &'a str,
+    pub name: &'a str,
+    pub representatives: Option<&'a str>,
 }
 
 #[derive(Debug, Serialize)]
-pub(super) struct Representative {
-    email: String,
+pub(super) struct Representative<'a> {
+    email: &'a str,
 }
-impl Representative {
-    pub fn new(email: &str) -> Representative {
-        Self {
-            email: email.to_string(),
-        }
+
+impl<'a> Representative<'a> {
+    pub fn new(email: &'a str) -> Representative<'a> {
+        Self { email }
     }
 }
 
@@ -38,13 +37,13 @@ pub(super) struct LicenseeResult {
 }
 
 #[derive(Debug, Serialize, Default)]
-pub struct ListLicenseeRequest {
+pub struct ListLicenseeRequest<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub offset: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub q: Option<String>,
+    pub q: Option<&'a str>,
 }
 
 #[derive(Debug, Deserialize, Clone)]

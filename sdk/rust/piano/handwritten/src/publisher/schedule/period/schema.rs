@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
-pub struct AddPeriodRequest {
-    pub schedule_id: String,
-    pub name: String,
+pub struct AddPeriodRequest<'a> {
+    pub schedule_id: &'a str,
+    pub name: &'a str,
     pub sell_date: i64,
     pub begin_date: i64,
     pub end_date: i64,

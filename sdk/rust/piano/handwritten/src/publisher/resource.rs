@@ -96,9 +96,9 @@ impl PianoAPI {
     ///
     /// See: [Piano API Documentation](https://docs.piano.io/api?endpoint=get~2F~2Fpublisher~2Fresource~2Flist)
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn list_resources(
+    pub async fn list_resources<'a>(
         &self,
-        params: &ListResourceRequest,
+        params: &ListResourceRequest<'a>,
     ) -> Result<PianoPaginated<ResourceListResult>, crate::Error> {
         let result = self
             .client
@@ -138,7 +138,7 @@ impl PianoAPI {
     ///
     /// See: [Piano API Documentation](https://docs.piano.io/api?endpoint=get~2F~2Fpublisher~2Fresource~2Fattach)
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn attach_resource(&self, req: &AttachResourceRequest) -> Result<(), crate::Error> {
+    pub async fn attach_resource<'a>(&self, req: &AttachResourceRequest<'a>) -> Result<(), crate::Error> {
         self.client
             .get(&format!("{}/publisher/resource/attach", self.endpoint))
             .query(&[("aid", &self.app_id)])

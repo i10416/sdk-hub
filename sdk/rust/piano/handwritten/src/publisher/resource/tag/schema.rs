@@ -341,8 +341,8 @@ mod tests {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
-                assert!(paginated.total >= 0);
-                assert!(paginated.count >= 0);
+                assert!(paginated.total >= 2);
+                assert!(paginated.count >= 1);
 
                 if !paginated.value.resource_tags.is_empty() {
                     let tag = &paginated.value.resource_tags[0];

@@ -5,9 +5,9 @@ use crate::{PianoAPI, PianoPaginated, PianoResponse};
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn list_contract_domain(
+    pub async fn list_contract_domain<'a>(
         &self,
-        params: &ListContractDomainRequest,
+        params: &ListContractDomainRequest<'a>,
     ) -> Result<PianoPaginated<ContractDomainListResult>, crate::Error> {
         let result = self
             .client
@@ -26,9 +26,9 @@ impl PianoAPI {
     }
 
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn create_contract_domain(
+    pub async fn create_contract_domain<'a>(
         &self,
-        req: &CreateContractDomainRequest,
+        req: &CreateContractDomainRequest<'a>,
     ) -> Result<ContractDomain, crate::Error> {
         println!("{:?}", self.app_id);
         let result = self
@@ -47,9 +47,9 @@ impl PianoAPI {
         Ok(result.contract_domain)
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn update_contract_domain(
+    pub async fn update_contract_domain<'a>(
         &self,
-        req: &UpdateContractDomainRequest,
+        req: &UpdateContractDomainRequest<'a>,
     ) -> Result<ContractDomain, crate::Error> {
         let result = self
             .client
@@ -67,9 +67,9 @@ impl PianoAPI {
         Ok(result.contract_domain)
     }
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn remove_contract_domain(
+    pub async fn remove_contract_domain<'a>(
         &self,
-        req: &RemoveContractDomainRequest,
+        req: &RemoveContractDomainRequest<'a>,
     ) -> Result<ContractDomain, crate::Error> {
         let result = self
             .client

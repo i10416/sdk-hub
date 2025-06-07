@@ -184,7 +184,7 @@ impl<'a> DeleteResourceRequest<'a> {
 
 /// Request to list resources
 #[derive(Debug, Serialize, Default)]
-pub struct ListResourceRequest {
+pub struct ListResourceRequest<'a> {
     /// Maximum number of results to return
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit: Option<usize>,
@@ -193,22 +193,22 @@ pub struct ListResourceRequest {
     pub offset: Option<usize>,
     /// Field to order by
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub order_by: Option<String>,
+    pub order_by: Option<&'a str>,
     /// Order direction (asc/desc)
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub order_direction: Option<String>,
+    pub order_direction: Option<&'a str>,
     /// Filter by resource type
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub resource_type: Option<String>,
+    pub resource_type: Option<&'a str>,
     /// Filter by disabled status
     #[serde(skip_serializing_if = "Option::is_none")]
     pub disabled: Option<bool>,
     /// Search query
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub q: Option<String>,
+    pub q: Option<&'a str>,
 }
 
-impl ListResourceRequest {
+impl<'a> ListResourceRequest<'a> {
     /// Create a new list resource request
     pub fn new() -> Self {
         Self::default()
@@ -227,20 +227,20 @@ impl ListResourceRequest {
     }
 
     /// Set the order by field
-    pub fn with_order_by(mut self, order_by: &str) -> Self {
-        self.order_by = Some(order_by.to_string());
+    pub fn with_order_by(mut self, order_by: &'a str) -> Self {
+        self.order_by = Some(order_by);
         self
     }
 
     /// Set the order direction
-    pub fn with_order_direction(mut self, order_direction: &str) -> Self {
-        self.order_direction = Some(order_direction.to_string());
+    pub fn with_order_direction(mut self, order_direction: &'a str) -> Self {
+        self.order_direction = Some(order_direction);
         self
     }
 
     /// Set the resource type filter
-    pub fn with_resource_type(mut self, resource_type: &str) -> Self {
-        self.resource_type = Some(resource_type.to_string());
+    pub fn with_resource_type(mut self, resource_type: &'a str) -> Self {
+        self.resource_type = Some(resource_type);
         self
     }
 
@@ -251,25 +251,25 @@ impl ListResourceRequest {
     }
 
     /// Set the search query
-    pub fn with_query(mut self, q: &str) -> Self {
-        self.q = Some(q.to_string());
+    pub fn with_query(mut self, q: &'a str) -> Self {
+        self.q = Some(q);
         self
     }
 }
 
 /// Request to attach resource to bundle
 #[derive(Debug, Serialize)]
-pub struct AttachResourceRequest {
+pub struct AttachResourceRequest<'a> {
     /// The resource bundle ID
-    pub bundle_rid: String,
+    pub bundle_rid: &'a str,
     /// The RIDs of the fixed bundles containing this resource
-    #[serde(serialize_with = "serialize_string_vec")]
-    pub included_rid: Vec<String>,
+    #[serde(serialize_with = "serialize_string_slice")]
+    pub included_rid: &'a [&'a str],
 }
 
-impl AttachResourceRequest {
+impl<'a> AttachResourceRequest<'a> {
     /// Create a new attach resource request
-    pub fn new(bundle_rid: String, included_rid: Vec<String>) -> Self {
+    pub fn new(bundle_rid: &'a str, included_rid: &'a [&'a str]) -> Self {
         Self {
             bundle_rid,
             included_rid,
@@ -294,7 +294,7 @@ impl<'a> DetachResourceRequest<'a> {
 }
 
 /// Request to list resource bundles
-#[derive(Debug, Serialize, Default)]
+#[derive(Debug, Serialize)]
 pub struct ListResourceBundlesRequest<'a> {
     /// The resource ID
     pub rid: &'a str,
@@ -306,10 +306,10 @@ pub struct ListResourceBundlesRequest<'a> {
     pub offset: Option<usize>,
     /// Field to order by
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub order_by: Option<String>,
+    pub order_by: Option<&'a str>,
     /// Order direction (asc/desc)
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub order_direction: Option<String>,
+    pub order_direction: Option<&'a str>,
 }
 
 impl<'a> ListResourceBundlesRequest<'a> {
@@ -337,14 +337,14 @@ impl<'a> ListResourceBundlesRequest<'a> {
     }
 
     /// Set the order by field
-    pub fn with_order_by(mut self, order_by: &str) -> Self {
-        self.order_by = Some(order_by.to_string());
+    pub fn with_order_by(mut self, order_by: &'a str) -> Self {
+        self.order_by = Some(order_by);
         self
     }
 
     /// Set the order direction
-    pub fn with_order_direction(mut self, order_direction: &str) -> Self {
-        self.order_direction = Some(order_direction.to_string());
+    pub fn with_order_direction(mut self, order_direction: &'a str) -> Self {
+        self.order_direction = Some(order_direction);
         self
     }
 }
@@ -481,13 +481,16 @@ pub(super) struct ResourceCountResult {
     pub data: i32,
 }
 
-// Helper function to serialize Vec<String> as comma-separated values
-fn serialize_string_vec<S>(vec: &Vec<String>, serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_string_slice<S>(slice: &&[&str], serializer: S) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {
-    let concatenated = vec.join(",");
-    serializer.serialize_str(&concatenated)
+    use serde::ser::SerializeSeq;
+    let mut seq = serializer.serialize_seq(Some(slice.len()))?;
+    for element in slice.iter() {
+        seq.serialize_element(element)?;
+    }
+    seq.end()
 }
 
 #[cfg(test)]
@@ -521,9 +524,9 @@ mod tests {
 
         assert_eq!(request.limit, Some(50));
         assert_eq!(request.offset, Some(10));
-        assert_eq!(request.resource_type, Some("article".to_string()));
+        assert_eq!(request.resource_type, Some("article"));
         assert_eq!(request.disabled, Some(false));
-        assert_eq!(request.q, Some("test search".to_string()));
+        assert_eq!(request.q, Some("test search"));
     }
 
     #[test]
@@ -574,8 +577,8 @@ mod tests {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
-                assert!(paginated.total >= 0);
-                assert!(paginated.count >= 0);
+                assert_eq!(paginated.total, 13);
+                assert_eq!(paginated.count, 1);
 
                 if !paginated.value.resources.is_empty() {
                     let resource = &paginated.value.resources[0];

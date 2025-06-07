@@ -7,79 +7,79 @@ pub struct ContractDomainListResult {
 }
 
 #[derive(Debug, Serialize)]
-pub struct ListContractDomainRequest {
-    contract_id: String,
+pub struct ListContractDomainRequest<'a> {
+    contract_id: &'a str,
 }
-impl ListContractDomainRequest {
-    pub fn new(contract_id: &str) -> Self {
-        Self {
-            contract_id: contract_id.to_string(),
-        }
+
+impl<'a> ListContractDomainRequest<'a> {
+    pub fn new(contract_id: &'a str) -> Self {
+        Self { contract_id }
     }
 }
 
 #[derive(Debug, Serialize)]
-pub struct CreateContractDomainRequest {
-    contract_id: String,
-    contract_domain_value: String,
+pub struct CreateContractDomainRequest<'a> {
+    contract_id: &'a str,
+    contract_domain_value: &'a str,
 }
 
 #[derive(Debug, Serialize)]
-pub struct UpdateContractDomainRequest {
-    contract_domain_id: String,
-    contract_id: String,
-    contract_domain_value: String,
+pub struct UpdateContractDomainRequest<'a> {
+    contract_domain_id: &'a str,
+    contract_id: &'a str,
+    contract_domain_value: &'a str,
 }
 
 #[derive(Debug, Serialize)]
-pub struct RemoveContractDomainRequest {
-    contract_domain_id: String,
-    contract_id: String,
-    contract_domain_value: String,
+pub struct RemoveContractDomainRequest<'a> {
+    contract_domain_id: &'a str,
+    contract_id: &'a str,
+    contract_domain_value: &'a str,
 }
 
-impl CreateContractDomainRequest {
+impl<'a> CreateContractDomainRequest<'a> {
     pub fn contract_id(&self) -> &str {
-        &self.contract_id
+        self.contract_id
     }
     pub fn contract_domain_value(&self) -> &str {
-        &self.contract_domain_value
+        self.contract_domain_value
     }
-    pub fn new(contract_id: &str, contract_domain_value: &str) -> Self {
+    pub fn new(contract_id: &'a str, contract_domain_value: &'a str) -> Self {
         Self {
-            contract_id: contract_id.to_string(),
-            contract_domain_value: contract_domain_value.to_string(),
+            contract_id,
+            contract_domain_value,
         }
     }
 }
 
-impl UpdateContractDomainRequest {
+impl<'a> UpdateContractDomainRequest<'a> {
     pub fn contract_id(&self) -> &str {
-        &self.contract_id
+        self.contract_id
     }
     pub fn contract_domain_value(&self) -> &str {
-        &self.contract_domain_value
+        self.contract_domain_value
     }
-    pub fn new(contract_domain_id: &str, contract_id: &str, contract_domain_value: &str) -> Self {
+    pub fn new(contract_domain_id: &'a str, contract_id: &'a str, contract_domain_value: &'a str) -> Self {
         Self {
-            contract_domain_id: contract_domain_id.to_string(),
-            contract_id: contract_id.to_string(),
-            contract_domain_value: contract_domain_value.to_string(),
+            contract_domain_id,
+            contract_id,
+            contract_domain_value,
         }
     }
 }
-impl RemoveContractDomainRequest {
+
+impl<'a> RemoveContractDomainRequest<'a> {
     pub fn contract_id(&self) -> &str {
-        &self.contract_id
+        self.contract_id
     }
     pub fn contract_domain_value(&self) -> &str {
-        &self.contract_domain_value
+        self.contract_domain_value
     }
-    pub fn new(contract_domain_id: &str, contract_id: &str, contract_domain_value: &str) -> Self {
+    pub fn new(contract_domain_id: &'a str, contract_id: &'a str, contract_domain_value: &'a str) -> Self {
         Self {
-            contract_domain_id: contract_domain_id.to_string(),
-            contract_id: contract_id.to_string(),
-            contract_domain_value: contract_domain_value.to_string(),
+            contract_domain_id,
+            contract_id,
+            contract_domain_value,
         }
     }
 }

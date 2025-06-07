@@ -457,8 +457,8 @@ mod tests {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
-                assert!(paginated.total >= 0);
-                assert!(paginated.count >= 0);
+                assert!(paginated.total >= 165);
+                assert!(paginated.count >= 1);
 
                 if !paginated.value.users.is_empty() {
                     let user = &paginated.value.users[0];

@@ -5,9 +5,9 @@ use crate::PianoAPI;
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn activate_schedule_period(
+    pub async fn activate_schedule_period<'a>(
         &self,
-        req: &ActivatePeriodRequest,
+        req: &ActivatePeriodRequest<'a>,
     ) -> Result<(), crate::Error> {
         let _ = self
             .client
