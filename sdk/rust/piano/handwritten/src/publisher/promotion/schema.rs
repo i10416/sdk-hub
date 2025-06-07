@@ -230,7 +230,7 @@ pub struct GeneratePromotionResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoPaginated, PianoResponse};
+    use crate::PianoResponse;
 
     #[test]
     fn test_create_promotion_request() {
@@ -265,8 +265,8 @@ mod tests {
         let paginated = response.value().unwrap();
         assert_eq!(paginated.limit, 1);
         assert_eq!(paginated.offset, 0);
-        assert!(paginated.total >= 0);
-        assert!(paginated.count >= 0);
+        assert_eq!(paginated.total, 52);
+        assert_eq!(paginated.count, 1);
 
         if !paginated.value.promotions.is_empty() {
             let promotion = &paginated.value.promotions[0];

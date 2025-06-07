@@ -268,11 +268,11 @@ mod tests {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
-                assert!(paginated.total >= 0);
-                assert!(paginated.count >= 0);
+                assert_eq!(paginated.total, 0);
+                assert_eq!(paginated.count, 0);
 
                 // Terms list might be empty, so we just verify the structure
-                assert!(paginated.value.terms.len() >= 0);
+                assert_eq!(paginated.value.terms.len(), 0);
             }
             PianoResponse::Failure { code, message, .. } => {
                 panic!("Expected success but got failure: {} - {}", code, message);

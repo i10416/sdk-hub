@@ -99,7 +99,7 @@ mod tests {
 
         match response {
             PianoResponse::Succeed(data) => {
-                assert!(data.value.licensees.len() >= 0);
+                assert_eq!(data.value.licensees.len(), 1);
             }
             PianoResponse::Failure { code, message, .. } => {
                 panic!("Expected success but got failure: {} - {}", code, message);

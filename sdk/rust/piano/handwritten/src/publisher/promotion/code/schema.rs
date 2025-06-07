@@ -228,7 +228,6 @@ pub(super) struct PromotionCodeCountResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{PianoPaginated, PianoResponse};
 
     #[test]
     fn test_list_promotion_code_request_builder() {
@@ -313,8 +312,8 @@ mod tests {
         let paginated = value.unwrap().value().unwrap();
         assert_eq!(paginated.limit, 1);
         assert_eq!(paginated.offset, 0);
-        assert!(paginated.total >= 0);
-        assert!(paginated.count >= 0);
+        assert_eq!(paginated.total, 1000);
+        assert_eq!(paginated.count, 1);
 
         if !paginated.value.promo_codes.is_empty() {
             let promo_code = &paginated.value.promo_codes[0];

@@ -176,8 +176,8 @@ mod tests {
             PianoResponse::Succeed(paginated) => {
                 assert_eq!(paginated.limit, 1);
                 assert_eq!(paginated.offset, 0);
-                assert!(paginated.total >= 0);
-                assert!(paginated.count >= 0);
+                assert_eq!(paginated.total, 1);
+                assert_eq!(paginated.count, 1);
 
                 if !paginated.value.resources.is_empty() {
                     let member = &paginated.value.resources[0];
