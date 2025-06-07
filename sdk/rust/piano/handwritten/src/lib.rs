@@ -99,15 +99,21 @@ impl<T: Clone> PianoResponse<T> {
     pub fn value(self) -> Result<T, crate::Error> {
         match self {
             Self::Succeed(t) => Result::Ok(t),
-            Self::Failure { code, message, .. } => {
+            Self::Failure {
+                code,
+                message,
+                validation_errors,
+                ..
+            } => {
                 let kind = match code {
                     61027 => ErrorKind::AlreadyExists,
                     _ => ErrorKind::Other,
                 };
-                Result::Err(Box::new(std::io::Error::new(
-                    kind,
-                    format!("{code}: {message}"),
-                )))
+                let error = match validation_errors {
+                    Some(validation) => format!("{code}: {message}: {}", validation.message),
+                    None => format!("{code}: {message}"),
+                };
+                Result::Err(Box::new(std::io::Error::new(kind, error)))
             }
         }
     }

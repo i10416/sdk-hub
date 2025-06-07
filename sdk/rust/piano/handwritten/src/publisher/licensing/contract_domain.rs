@@ -30,13 +30,14 @@ impl PianoAPI {
         &self,
         req: &CreateContractDomainRequest,
     ) -> Result<ContractDomain, crate::Error> {
+        println!("{:?}",self.app_id);
         let result = self
             .client
             .post(&format!(
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?

@@ -2,6 +2,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Object<T> {
+    // Known Values: [DEAL, UNKNOWN]
     #[serde(rename = "objectType")]
     pub object_type: String,
     #[serde(rename = "objectId")]

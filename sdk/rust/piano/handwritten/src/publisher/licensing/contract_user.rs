@@ -38,7 +38,7 @@ impl PianoAPI {
                 "{}/publisher/licensing/contractUser/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?
