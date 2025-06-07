@@ -16,7 +16,7 @@ impl PianoAPI {
     ) -> Result<ResourceTag, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/resource/tag/create", self.endpoint))
+            .post(format!("{}/publisher/resource/tag/create", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -39,7 +39,7 @@ impl PianoAPI {
     ) -> Result<Option<ResourceTag>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/tag/get", self.endpoint))
+            .get(format!("{}/publisher/resource/tag/get", self.endpoint))
             .query(&[
                 ("aid", &self.app_id),
                 ("resource_tag_id", &resource_tag_id.to_string()),
@@ -64,7 +64,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ResourceTagListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/tag/list", self.endpoint))
+            .get(format!("{}/publisher/resource/tag/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -86,7 +86,7 @@ impl PianoAPI {
         req: &DeleteResourceTagRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/resource/tag/delete", self.endpoint))
+            .post(format!("{}/publisher/resource/tag/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -105,7 +105,7 @@ impl PianoAPI {
         req: &AttachResourceTagRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/resource/tag/attach", self.endpoint))
+            .post(format!("{}/publisher/resource/tag/attach", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -124,7 +124,7 @@ impl PianoAPI {
         req: &DetachResourceTagRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/resource/tag/detach", self.endpoint))
+            .post(format!("{}/publisher/resource/tag/detach", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -144,7 +144,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<crate::publisher::resource::ResourceListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/tag/bundles", self.endpoint))
+            .get(format!("{}/publisher/resource/tag/bundles", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()

@@ -19,7 +19,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<PromotionCodeListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/code/list", self.endpoint))
+            .get(format!("{}/publisher/promotion/code/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -42,10 +42,7 @@ impl PianoAPI {
     ) -> Result<PromotionCode, crate::Error> {
         let result = self
             .client
-            .get(&format!(
-                "{}/publisher/promotion/code/create",
-                self.endpoint
-            ))
+            .get(format!("{}/publisher/promotion/code/create", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(req)
             .send()
@@ -68,7 +65,7 @@ impl PianoAPI {
     ) -> Result<i32, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/code/count", self.endpoint))
+            .get(format!("{}/publisher/promotion/code/count", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -90,10 +87,7 @@ impl PianoAPI {
         req: &DeletePromotionCodeRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!(
-                "{}/publisher/promotion/code/delete",
-                self.endpoint
-            ))
+            .post(format!("{}/publisher/promotion/code/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()

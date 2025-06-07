@@ -19,7 +19,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<PromotionTermListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/term/list", self.endpoint))
+            .get(format!("{}/publisher/promotion/term/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -41,7 +41,7 @@ impl PianoAPI {
         req: &AddPromotionTermRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/promotion/term/add", self.endpoint))
+            .post(format!("{}/publisher/promotion/term/add", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -60,10 +60,7 @@ impl PianoAPI {
         req: &DeletePromotionTermRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!(
-                "{}/publisher/promotion/term/delete",
-                self.endpoint
-            ))
+            .post(format!("{}/publisher/promotion/term/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()

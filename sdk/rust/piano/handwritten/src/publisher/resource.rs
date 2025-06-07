@@ -15,7 +15,7 @@ impl PianoAPI {
     pub async fn get_resource(&self, rid: &str) -> Result<Option<Resource>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/get", self.endpoint))
+            .get(format!("{}/publisher/resource/get", self.endpoint))
             .query(&[("aid", &self.app_id), ("rid", &rid.to_string())])
             .send()
             .await?
@@ -37,7 +37,7 @@ impl PianoAPI {
     ) -> Result<Resource, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/resource/create", self.endpoint))
+            .post(format!("{}/publisher/resource/create", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -60,7 +60,7 @@ impl PianoAPI {
     ) -> Result<Resource, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/resource/update", self.endpoint))
+            .post(format!("{}/publisher/resource/update", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -82,7 +82,7 @@ impl PianoAPI {
         req: &DeleteResourceRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/resource/delete", self.endpoint))
+            .post(format!("{}/publisher/resource/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -102,7 +102,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ResourceListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/list", self.endpoint))
+            .get(format!("{}/publisher/resource/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -122,7 +122,7 @@ impl PianoAPI {
     pub async fn count_resources(&self) -> Result<i32, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/count", self.endpoint))
+            .get(format!("{}/publisher/resource/count", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .send()
             .await?
@@ -143,7 +143,7 @@ impl PianoAPI {
         req: &AttachResourceRequest<'a>,
     ) -> Result<(), crate::Error> {
         self.client
-            .get(&format!("{}/publisher/resource/attach", self.endpoint))
+            .get(format!("{}/publisher/resource/attach", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(req)
             .send()
@@ -162,7 +162,7 @@ impl PianoAPI {
         req: &DetachResourceRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .get(&format!("{}/publisher/resource/detach", self.endpoint))
+            .get(format!("{}/publisher/resource/detach", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(req)
             .send()
@@ -182,7 +182,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ResourceListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/resource/bundles", self.endpoint))
+            .get(format!("{}/publisher/resource/bundles", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()

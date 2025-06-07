@@ -11,7 +11,7 @@ impl PianoAPI {
     ) -> Result<Period, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/schedule/period/add", self.endpoint,))
+            .post(format!("{}/publisher/schedule/period/add", self.endpoint,))
             .query(&[("aid", &self.app_id)])
             .form(&req)
             .send()
@@ -28,7 +28,7 @@ impl PianoAPI {
     ) -> Result<Period, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/schedule/period/update",
                 self.endpoint,
             ))
@@ -46,7 +46,7 @@ impl PianoAPI {
     pub async fn remove_schedule_period(&self, period_id: &str) -> Result<(), crate::Error> {
         let _ = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/schedule/period/remove",
                 self.endpoint,
             ))

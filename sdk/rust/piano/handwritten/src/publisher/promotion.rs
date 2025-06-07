@@ -18,7 +18,7 @@ impl PianoAPI {
     ) -> Result<Option<Promotion>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/get", self.endpoint))
+            .get(format!("{}/publisher/promotion/get", self.endpoint))
             .query(&[
                 ("aid", &self.app_id),
                 ("promotion_id", &promotion_id.to_string()),
@@ -43,7 +43,7 @@ impl PianoAPI {
     ) -> Result<Promotion, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/promotion/create", self.endpoint))
+            .post(format!("{}/publisher/promotion/create", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -66,7 +66,7 @@ impl PianoAPI {
     ) -> Result<Promotion, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/promotion/update", self.endpoint))
+            .post(format!("{}/publisher/promotion/update", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -88,7 +88,7 @@ impl PianoAPI {
         req: &DeletePromotionRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/promotion/delete", self.endpoint))
+            .post(format!("{}/publisher/promotion/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -108,7 +108,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<PromotionListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/list", self.endpoint))
+            .get(format!("{}/publisher/promotion/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -131,7 +131,7 @@ impl PianoAPI {
     ) -> Result<i32, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/count", self.endpoint))
+            .get(format!("{}/publisher/promotion/count", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -151,7 +151,7 @@ impl PianoAPI {
     pub async fn promotion_exists(&self, name: &str) -> Result<bool, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/promotion/exists", self.endpoint))
+            .get(format!("{}/publisher/promotion/exists", self.endpoint))
             .query(&[("aid", &self.app_id), ("name", &name.to_string())])
             .send()
             .await?
@@ -173,7 +173,7 @@ impl PianoAPI {
     ) -> Result<GeneratePromotionResult, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/promotion/generate", self.endpoint))
+            .post(format!("{}/publisher/promotion/generate", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()

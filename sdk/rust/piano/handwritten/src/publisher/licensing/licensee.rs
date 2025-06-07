@@ -11,7 +11,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListLicenseeResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/licensee/list",
                 self.endpoint,
             ))
@@ -45,7 +45,7 @@ impl PianoAPI {
         };
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/licensee/create",
                 self.endpoint,
             ))
@@ -79,7 +79,7 @@ impl PianoAPI {
         };
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/licensee/create",
                 self.endpoint,
             ))

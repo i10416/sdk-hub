@@ -8,7 +8,7 @@ impl PianoAPI {
     pub async fn get_schedule(&self) -> Result<Option<Schedule>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/schedule/get", self.endpoint,))
+            .get(format!("{}/publisher/schedule/get", self.endpoint,))
             .query(&[("aid", &self.app_id)])
             .send()
             .await?
@@ -21,7 +21,7 @@ impl PianoAPI {
     pub async fn create_schedule(&self, name: &str) -> Result<Schedule, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/schedule/create", self.endpoint,))
+            .post(format!("{}/publisher/schedule/create", self.endpoint,))
             .query(&[("aid", &self.app_id)])
             .form(&[("name", name)])
             .send()
@@ -39,7 +39,7 @@ impl PianoAPI {
     ) -> Result<Schedule, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/schedule/update", self.endpoint))
+            .post(format!("{}/publisher/schedule/update", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(&[("name", name), ("schedule_id", schedule_id)])
             .send()

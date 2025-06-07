@@ -16,7 +16,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ContractIpRangeListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/contractIpRange/list",
                 self.endpoint,
             ))
@@ -42,7 +42,7 @@ impl PianoAPI {
     ) -> Result<ContractIpRange, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractIpRange/create",
                 self.endpoint,
             ))
@@ -68,7 +68,7 @@ impl PianoAPI {
     ) -> Result<ContractIpRange, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractIpRange/update",
                 self.endpoint,
             ))
@@ -93,7 +93,7 @@ impl PianoAPI {
         req: &RemoveContractIpRangeRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractIpRange/remove",
                 self.endpoint,
             ))

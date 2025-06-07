@@ -29,7 +29,7 @@ impl PianoAPI {
     > {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/contractDomain/contractUser/list",
                 self.endpoint,
             ))

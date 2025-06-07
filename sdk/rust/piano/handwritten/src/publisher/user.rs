@@ -43,7 +43,7 @@ impl PianoAPI {
     pub async fn get_user(&self, uid: &str) -> Result<Option<User>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/user/get", self.endpoint))
+            .get(format!("{}/publisher/user/get", self.endpoint))
             .query(&[("aid", &self.app_id), ("uid", &uid.to_string())])
             .send()
             .await?
@@ -66,7 +66,7 @@ impl PianoAPI {
         };
         let result = self
             .client
-            .post(&format!("{}/publisher/user/create", self.endpoint))
+            .post(format!("{}/publisher/user/create", self.endpoint))
             .form(&req)
             .send()
             .await?
@@ -89,7 +89,7 @@ impl PianoAPI {
         };
         let result = self
             .client
-            .post(&format!("{}/publisher/user/update", self.endpoint))
+            .post(format!("{}/publisher/user/update", self.endpoint))
             .form(&req)
             .send()
             .await?
@@ -111,7 +111,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListUserResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/user/list", self.endpoint))
+            .get(format!("{}/publisher/user/list", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()
@@ -134,7 +134,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListUserResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/user/search", self.endpoint))
+            .get(format!("{}/publisher/user/search", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()

@@ -148,7 +148,7 @@ impl<'a> UpdateUserRequest<'a> {
 }
 
 /// Request parameters for listing users with filtering and pagination.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct ListUserRequest<'a> {
     /// Maximum number of results to return (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -168,19 +168,6 @@ pub struct ListUserRequest<'a> {
     /// Order direction (asc/desc) (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub order_direction: Option<&'a str>,
-}
-
-impl<'a> Default for ListUserRequest<'a> {
-    fn default() -> Self {
-        Self {
-            limit: None,
-            offset: None,
-            q: None,
-            status: None,
-            order_by: None,
-            order_direction: None,
-        }
-    }
 }
 
 impl<'a> ListUserRequest<'a> {
@@ -227,7 +214,7 @@ impl<'a> ListUserRequest<'a> {
 }
 
 /// Request parameters for searching users.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct SearchUserRequest<'a> {
     /// Email to search for (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -241,17 +228,6 @@ pub struct SearchUserRequest<'a> {
     /// Offset for pagination (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub offset: Option<usize>,
-}
-
-impl<'a> Default for SearchUserRequest<'a> {
-    fn default() -> Self {
-        Self {
-            email: None,
-            uid: None,
-            limit: None,
-            offset: None,
-        }
-    }
 }
 
 impl<'a> SearchUserRequest<'a> {

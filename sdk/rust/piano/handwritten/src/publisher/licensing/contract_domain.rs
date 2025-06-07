@@ -11,7 +11,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ContractDomainListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/contractDomain/list",
                 self.endpoint,
             ))
@@ -33,7 +33,7 @@ impl PianoAPI {
         println!("{:?}", self.app_id);
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))
@@ -53,7 +53,7 @@ impl PianoAPI {
     ) -> Result<ContractDomain, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))
@@ -73,7 +73,7 @@ impl PianoAPI {
     ) -> Result<ContractDomain, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))

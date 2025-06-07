@@ -11,7 +11,7 @@ impl PianoAPI {
     ) -> Result<(), crate::Error> {
         let _ = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/schedule/contract/periods/activate",
                 self.endpoint,
             ))

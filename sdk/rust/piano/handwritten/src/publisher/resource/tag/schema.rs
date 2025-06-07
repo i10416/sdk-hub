@@ -274,7 +274,7 @@ pub struct ResourceTagListResult {
 }
 
 // Helper function to serialize Vec<String> as comma-separated values
-fn serialize_string_vec<S>(vec: &Vec<String>, serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_string_vec<S>(vec: &[String], serializer: S) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {

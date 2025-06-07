@@ -12,7 +12,7 @@ impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn gdpr_delete(&self, req: &GdprDeleteRequest<'_>) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/gdpr/delete", self.endpoint))
+            .post(format!("{}/publisher/gdpr/delete", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -31,7 +31,7 @@ impl PianoAPI {
         req: &GdprDeleteAnonymousRequest<'_>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!("{}/publisher/gdpr/deleteAnon", self.endpoint))
+            .post(format!("{}/publisher/gdpr/deleteAnon", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
@@ -51,7 +51,7 @@ impl PianoAPI {
     ) -> Result<GdprExportResponse, crate::Error> {
         let result = self
             .client
-            .post(&format!("{}/publisher/gdpr/export", self.endpoint))
+            .post(format!("{}/publisher/gdpr/export", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()

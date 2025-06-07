@@ -83,7 +83,7 @@ impl<'a> RevokeAccessRequest<'a> {
 }
 
 /// Request parameters for listing user access rights.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct ListAccessRequest<'a> {
     /// Maximum number of results to return (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -97,17 +97,6 @@ pub struct ListAccessRequest<'a> {
     /// Filter by status (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<&'a str>,
-}
-
-impl<'a> Default for ListAccessRequest<'a> {
-    fn default() -> Self {
-        Self {
-            limit: None,
-            offset: None,
-            resource_type: None,
-            status: None,
-        }
-    }
 }
 
 impl<'a> ListAccessRequest<'a> {
@@ -142,7 +131,7 @@ impl<'a> ListAccessRequest<'a> {
 }
 
 /// Request parameters for listing all access grants.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct ListAllAccessRequest<'a> {
     /// Maximum number of results to return (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -162,19 +151,6 @@ pub struct ListAllAccessRequest<'a> {
     /// Filter by status (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<&'a str>,
-}
-
-impl<'a> Default for ListAllAccessRequest<'a> {
-    fn default() -> Self {
-        Self {
-            limit: None,
-            offset: None,
-            uid: None,
-            resource_id: None,
-            resource_type: None,
-            status: None,
-        }
-    }
 }
 
 impl<'a> ListAllAccessRequest<'a> {

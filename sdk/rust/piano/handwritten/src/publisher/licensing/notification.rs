@@ -27,7 +27,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<NotificationListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/notification/list",
                 self.endpoint,
             ))

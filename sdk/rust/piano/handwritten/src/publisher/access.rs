@@ -45,7 +45,7 @@ impl PianoAPI {
         };
         let result = self
             .client
-            .post(&format!("{}/publisher/access/grant", self.endpoint))
+            .post(format!("{}/publisher/access/grant", self.endpoint))
             .form(&req)
             .send()
             .await?
@@ -70,7 +70,7 @@ impl PianoAPI {
             inner: params,
         };
         self.client
-            .post(&format!("{}/publisher/access/revoke", self.endpoint))
+            .post(format!("{}/publisher/access/revoke", self.endpoint))
             .form(&req)
             .send()
             .await?
@@ -90,7 +90,7 @@ impl PianoAPI {
     pub async fn check_access(&self, uid: &str, resource_id: &str) -> Result<bool, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/access/check", self.endpoint))
+            .get(format!("{}/publisher/access/check", self.endpoint))
             .query(&[
                 ("aid", &self.app_id),
                 ("uid", &uid.to_string()),
@@ -117,7 +117,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListAccessResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/access/list", self.endpoint))
+            .get(format!("{}/publisher/access/list", self.endpoint))
             .query(&[("aid", &self.app_id), ("uid", &uid.to_string())])
             .query(params)
             .send()
@@ -140,7 +140,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListAccessResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!("{}/publisher/access/list_all", self.endpoint))
+            .get(format!("{}/publisher/access/list_all", self.endpoint))
             .query(&[("aid", &self.app_id)])
             .query(params)
             .send()

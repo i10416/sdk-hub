@@ -16,7 +16,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<crate::publisher::resource::ResourceListResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/resource/bundle/members",
                 self.endpoint
             ))

@@ -13,7 +13,7 @@ impl PianoAPI {
     ) -> Result<PianoPaginated<ListContractResult>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/contract/list",
                 self.endpoint,
             ))
@@ -46,7 +46,7 @@ impl PianoAPI {
     pub async fn get_contract(&self, contract_id: &str) -> Result<Option<Contract>, crate::Error> {
         let result = self
             .client
-            .get(&format!(
+            .get(format!(
                 "{}/publisher/licensing/contract/get",
                 self.endpoint,
             ))
@@ -66,7 +66,7 @@ impl PianoAPI {
     ) -> Result<Contract, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contract/create",
                 self.endpoint,
             ))
@@ -86,7 +86,7 @@ impl PianoAPI {
     ) -> Result<Contract, crate::Error> {
         let result = self
             .client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contract/update",
                 self.endpoint,
             ))
@@ -121,7 +121,7 @@ impl PianoAPI {
         req: &ArchiveContractRequest<'a>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contract/archive",
                 self.endpoint,
             ))
@@ -156,7 +156,7 @@ impl PianoAPI {
         req: &DeactivateContractRequest<'a>,
     ) -> Result<(), crate::Error> {
         self.client
-            .post(&format!(
+            .post(format!(
                 "{}/publisher/licensing/contract/deactivate",
                 self.endpoint,
             ))
