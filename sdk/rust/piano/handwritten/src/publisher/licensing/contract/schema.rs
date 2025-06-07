@@ -168,6 +168,21 @@ pub struct ContractPeriod {
 }
 
 impl ContractPeriod {
+    pub fn ready(&self) -> bool {
+        matches!(
+            self.status(),
+            SchedulePeriodStatus::Active | SchedulePeriodStatus::Activated
+        )
+    }
+    pub fn not_ready(&self) -> bool {
+        matches!(
+            self.status(),
+            SchedulePeriodStatus::Inactive | SchedulePeriodStatus::Ended
+        )
+    }
+}
+
+impl ContractPeriod {
     pub fn period_id(&self) -> &str {
         &self.period_id
     }
@@ -190,6 +205,8 @@ impl ContractPeriod {
 
 #[derive(Debug, Deserialize, Clone)]
 pub enum SchedulePeriodStatus {
+    #[serde(rename = "ACTIVATED")]
+    Activated,
     #[serde(rename = "ACTIVE")]
     Active,
     #[serde(rename = "INACTIVE")]

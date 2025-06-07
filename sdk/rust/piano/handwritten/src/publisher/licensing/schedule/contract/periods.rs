@@ -4,6 +4,7 @@ pub use schema::*;
 use crate::PianoAPI;
 
 impl PianoAPI {
+    /// set status to `Active` for started periods or `Activated` for not started periods
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn activate_schedule_period<'a>(
         &self,

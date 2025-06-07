@@ -42,6 +42,8 @@ impl SchedulePeriod {
 }
 #[derive(Debug, Deserialize, Clone)]
 pub enum SchedulePeriodStatus {
+    #[serde(rename = "ACTIVATED")]
+    Activated,
     #[serde(rename = "ACTIVE")]
     Active,
     #[serde(rename = "INACTIVE")]
