@@ -59,7 +59,11 @@ impl<'a> UpdateContractDomainRequest<'a> {
     pub fn contract_domain_value(&self) -> &str {
         self.contract_domain_value
     }
-    pub fn new(contract_domain_id: &'a str, contract_id: &'a str, contract_domain_value: &'a str) -> Self {
+    pub fn new(
+        contract_domain_id: &'a str,
+        contract_id: &'a str,
+        contract_domain_value: &'a str,
+    ) -> Self {
         Self {
             contract_domain_id,
             contract_id,
@@ -75,7 +79,11 @@ impl<'a> RemoveContractDomainRequest<'a> {
     pub fn contract_domain_value(&self) -> &str {
         self.contract_domain_value
     }
-    pub fn new(contract_domain_id: &'a str, contract_id: &'a str, contract_domain_value: &'a str) -> Self {
+    pub fn new(
+        contract_domain_id: &'a str,
+        contract_id: &'a str,
+        contract_domain_value: &'a str,
+    ) -> Self {
         Self {
             contract_domain_id,
             contract_id,

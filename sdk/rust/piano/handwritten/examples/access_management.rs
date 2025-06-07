@@ -11,11 +11,7 @@ use piano_handwritten_api::{publisher::access::*, PianoAPI};
 async fn main() -> Result<(), piano_handwritten_api::Error> {
     // Initialize the Piano API client
     // In production, these would come from environment variables or configuration
-    let api = PianoAPI::new(
-        "https://sandbox.piano.io/api/v3", // Use sandbox for testing
-        "your_app_id",
-        "your_api_token",
-    );
+    let api = PianoAPI::from_env();
 
     println!("Piano SDK Access Management Example");
     println!("===================================");

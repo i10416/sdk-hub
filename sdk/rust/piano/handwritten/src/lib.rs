@@ -17,6 +17,12 @@ pub struct PianoAPI {
 }
 
 impl PianoAPI {
+    pub fn from_env() -> Self {
+        let endpoint = std::env::var("PIANO_ENDPOINT").expect("PIANO_ENDPOINT is not set");
+        let app_id = std::env::var("PIANO_APP_ID").expect("PIANO_APP_ID is not set");
+        let token = std::env::var("PIANO_API_TOKEN").expect("PIANO_API_TOKEN is not set");
+        Self::new(&endpoint, &app_id, &token)
+    }
     pub fn new(endpoint: &str, app_id: &str, token: &str) -> Self {
         let client = reqwest::Client::builder()
             .default_headers(Self::mk_header(token))
