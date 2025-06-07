@@ -101,7 +101,7 @@ impl Notification {
 #[derive(Debug, Deserialize, Clone)]
 pub struct NotificationListResult {
     /// Array of notifications
-    #[serde(alias = "notifications")]
+    #[serde(alias = "licenseeNotifications")]
     pub notifications: Vec<Notification>,
 }
 
@@ -138,5 +138,19 @@ mod tests {
         assert_eq!(notification.create_date(), 1640995200);
         assert_eq!(notification.contract_id(), Some("contract123"));
         assert_eq!(notification.licensee_id(), Some("licensee123"));
+    }
+
+    #[test]
+    fn sanity_check_list_notifications_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<
+            crate::PianoResponse<crate::PianoPaginated<NotificationListResult>>,
+        >(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize notification list: {:?}",
+            value.err()
+        );
     }
 }

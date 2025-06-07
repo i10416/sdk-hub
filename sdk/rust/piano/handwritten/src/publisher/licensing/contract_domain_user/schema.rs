@@ -96,4 +96,22 @@ mod tests {
         assert_eq!(req.limit, Some(50));
         assert_eq!(req.offset, Some(10));
     }
+
+    #[test]
+    fn sanity_check_list_contract_domain_users_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<
+            crate::PianoResponse<
+                crate::PianoPaginated<
+                    crate::publisher::licensing::contract_user::ContractUserListResult,
+                >,
+            >,
+        >(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize contract domain user list: {:?}",
+            value.err()
+        );
+    }
 }
