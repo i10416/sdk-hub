@@ -7,6 +7,8 @@ use crate::{
 };
 
 impl PianoAPI {
+    /// Before calling this function, at least one contract period must be active.
+    /// To activate all periods in a schedule, use `PianoAPI::activate_schedule_period`
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn activate_contract(
         &self,

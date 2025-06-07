@@ -164,7 +164,7 @@ pub struct ContractPeriod {
     sell_date: i64,
     begin_date: i64,
     end_date: i64,
-    status: String,
+    status: SchedulePeriodStatus,
 }
 
 impl ContractPeriod {
@@ -183,9 +183,19 @@ impl ContractPeriod {
     pub fn end_date(&self) -> i64 {
         self.end_date
     }
-    pub fn status(&self) -> &str {
+    pub fn status(&self) -> &SchedulePeriodStatus {
         &self.status
     }
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub enum SchedulePeriodStatus {
+    #[serde(rename = "ACTIVE")]
+    Active,
+    #[serde(rename = "INACTIVE")]
+    Inactive,
+    #[serde(rename = "ENDED")]
+    Ended,
 }
 
 impl Contract {
