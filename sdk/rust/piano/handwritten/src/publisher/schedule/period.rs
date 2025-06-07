@@ -12,7 +12,7 @@ impl PianoAPI {
         let result = self
             .client
             .post(&format!("{}/publisher/schedule/period/add", self.endpoint,))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(&req)
             .send()
             .await?
@@ -32,7 +32,7 @@ impl PianoAPI {
                 "{}/publisher/schedule/period/update",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(&req)
             .send()
             .await?
@@ -50,7 +50,7 @@ impl PianoAPI {
                 "{}/publisher/schedule/period/remove",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(&[("period_id", period_id)])
             .send()
             .await?

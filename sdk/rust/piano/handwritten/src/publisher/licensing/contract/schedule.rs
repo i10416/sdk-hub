@@ -1,27 +1,30 @@
 mod schema;
 pub use schema::*;
 
-use crate::{PianoAPI, PianoResponse};
+use crate::{
+    publisher::licensing::contract::{Contract, ContractResult},
+    PianoAPI, PianoResponse,
+};
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn activate_contract_periods(
+    pub async fn activate_contract(
         &self,
-        req: &ActivatePeriodRequest,
-    ) -> Result<SchedulePeriod, crate::Error> {
+        req: &ActivateContractRequest<'_>,
+    ) -> Result<Contract, crate::Error> {
         let result = self
             .client
             .post(&format!(
-                "{}/publisher/licensing/contract/periods/activate",
+                "{}/publisher/licensing/contract/activate",
                 self.endpoint,
             ))
             .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?
-            .json::<PianoResponse<SchedulePeriodResult>>()
+            .json::<PianoResponse<ContractResult>>()
             .await?
             .value()?;
-        Ok(result.schedule_period)
+        Ok(result.contract)
     }
 }

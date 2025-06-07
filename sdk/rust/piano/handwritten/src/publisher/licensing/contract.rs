@@ -1,4 +1,5 @@
 pub mod periods;
+pub mod schedule;
 mod schema;
 pub use self::schema::*;
 
@@ -36,7 +37,7 @@ impl PianoAPI {
                 "{}/publisher/licensing/contract/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?
@@ -56,7 +57,7 @@ impl PianoAPI {
                 "{}/publisher/licensing/contract/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?

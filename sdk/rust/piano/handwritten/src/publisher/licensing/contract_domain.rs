@@ -57,7 +57,7 @@ impl PianoAPI {
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?
@@ -77,7 +77,7 @@ impl PianoAPI {
                 "{}/publisher/licensing/contractDomain/create",
                 self.endpoint,
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?

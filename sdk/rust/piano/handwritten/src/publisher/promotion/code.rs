@@ -94,7 +94,7 @@ impl PianoAPI {
                 "{}/publisher/promotion/code/delete",
                 self.endpoint
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;

@@ -17,7 +17,7 @@ impl PianoAPI {
         let result = self
             .client
             .post(&format!("{}/publisher/resource/tag/create", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?
@@ -87,7 +87,7 @@ impl PianoAPI {
     ) -> Result<(), crate::Error> {
         self.client
             .post(&format!("{}/publisher/resource/tag/delete", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;
@@ -106,7 +106,7 @@ impl PianoAPI {
     ) -> Result<(), crate::Error> {
         self.client
             .post(&format!("{}/publisher/resource/tag/attach", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;
@@ -125,7 +125,7 @@ impl PianoAPI {
     ) -> Result<(), crate::Error> {
         self.client
             .post(&format!("{}/publisher/resource/tag/detach", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;

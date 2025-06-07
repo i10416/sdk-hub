@@ -22,7 +22,7 @@ impl PianoAPI {
         let result = self
             .client
             .post(&format!("{}/publisher/schedule/create", self.endpoint,))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(&[("name", name)])
             .send()
             .await?
@@ -40,7 +40,7 @@ impl PianoAPI {
         let result = self
             .client
             .post(&format!("{}/publisher/schedule/update", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(&[("name", name), ("schedule_id", schedule_id)])
             .send()
             .await?

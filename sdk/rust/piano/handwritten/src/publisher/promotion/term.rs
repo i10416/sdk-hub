@@ -42,7 +42,7 @@ impl PianoAPI {
     ) -> Result<(), crate::Error> {
         self.client
             .post(&format!("{}/publisher/promotion/term/add", self.endpoint))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;
@@ -64,7 +64,7 @@ impl PianoAPI {
                 "{}/publisher/promotion/term/delete",
                 self.endpoint
             ))
-            .form(&[("aid", &self.app_id)])
+            .query(&[("aid", &self.app_id)])
             .form(req)
             .send()
             .await?;
