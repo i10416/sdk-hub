@@ -7,9 +7,9 @@ use crate::{Empty, PianoAPI, PianoPaginated, PianoResponse};
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn list_contracts(
+    pub async fn list_contracts<'a>(
         &self,
-        params: &ListContractRequest,
+        params: &ListContractRequest<'a>,
     ) -> Result<PianoPaginated<ListContractResult>, crate::Error> {
         let result = self
             .client

@@ -1,11 +1,48 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Default)]
-pub struct ListContractRequest {
+pub struct ListContractRequest<'a> {
+    /// The public ID of the licensee (required)
+    pub licensee_id: &'a str,
+    /// Search query (optional)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub q: Option<&'a str>,
+    /// Maximum number of results to return (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub limit: Option<usize>,
+    /// Offset for pagination (optional)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub offset: Option<usize>,
+}
+
+impl<'a> ListContractRequest<'a> {
+    /// Create a new list contracts request
+    pub fn new(licensee_id: &'a str) -> Self {
+        Self {
+            licensee_id,
+            q: None,
+            limit: None,
+            offset: None,
+        }
+    }
+
+    /// Set the search query
+    pub fn with_query(mut self, q: &'a str) -> Self {
+        self.q = Some(q);
+        self
+    }
+
+    /// Set the maximum number of results to return
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Set the offset for pagination
+    pub fn with_offset(mut self, offset: usize) -> Self {
+        self.offset = Some(offset);
+        self
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -99,25 +136,94 @@ pub(super) struct ContractResult {
 #[derive(Debug, Deserialize, Clone)]
 pub struct Contract {
     contract_id: String,
+    aid: String,
     contract_type: PianoContractType,
     name: String,
+    #[serde(default)]
+    description: Option<String>,
+    create_date: i64,
+    #[serde(default)]
+    landing_page_url: Option<String>,
+    licensee_id: String,
     seats_number: usize,
     is_hard_seats_limit_type: bool,
     rid: String,
+    #[serde(default)]
+    schedule_id: Option<String>,
     contract_is_active: bool,
+    #[serde(default)]
+    contract_periods: Vec<ContractPeriod>,
+    #[serde(default)]
+    contract_conversions_count: usize,
 }
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct ContractPeriod {
+    period_id: String,
+    name: String,
+    sell_date: i64,
+    begin_date: i64,
+    end_date: i64,
+    status: String,
+}
+
+impl ContractPeriod {
+    pub fn period_id(&self) -> &str {
+        &self.period_id
+    }
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+    pub fn sell_date(&self) -> i64 {
+        self.sell_date
+    }
+    pub fn begin_date(&self) -> i64 {
+        self.begin_date
+    }
+    pub fn end_date(&self) -> i64 {
+        self.end_date
+    }
+    pub fn status(&self) -> &str {
+        &self.status
+    }
+}
+
 impl Contract {
     pub fn contract_id(&self) -> &str {
         &self.contract_id
     }
+    pub fn aid(&self) -> &str {
+        &self.aid
+    }
     pub fn rid(&self) -> &str {
         &self.rid
+    }
+    pub fn licensee_id(&self) -> &str {
+        &self.licensee_id
     }
     pub fn seats_number(&self) -> usize {
         self.seats_number
     }
     pub fn contract_name(&self) -> &str {
         &self.name
+    }
+    pub fn description(&self) -> Option<&str> {
+        self.description.as_deref()
+    }
+    pub fn create_date(&self) -> i64 {
+        self.create_date
+    }
+    pub fn landing_page_url(&self) -> Option<&str> {
+        self.landing_page_url.as_deref()
+    }
+    pub fn schedule_id(&self) -> Option<&str> {
+        self.schedule_id.as_deref()
+    }
+    pub fn contract_periods(&self) -> &[ContractPeriod] {
+        &self.contract_periods
+    }
+    pub fn contract_conversions_count(&self) -> usize {
+        self.contract_conversions_count
     }
     pub fn contract_type(&self) -> &PianoContractType {
         &self.contract_type

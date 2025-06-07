@@ -1,14 +1,13 @@
 mod schema;
 pub use schema::*;
 
-use crate::{Empty, Pagination, PianoAPI, PianoPaginated, PianoResponse};
+use crate::{Empty, PianoAPI, PianoPaginated, PianoResponse};
 
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn list_contract_user<'a>(
         &self,
         req: &ListContractUserRequest<'a>,
-        pagination: Pagination,
     ) -> Result<PianoPaginated<ContractUserListResult>, crate::Error> {
         let result = self
             .client
@@ -18,7 +17,6 @@ impl PianoAPI {
             ))
             .query(&[("aid", &self.app_id)])
             .query(req)
-            .query(&pagination)
             .send()
             .await?
             .json::<PianoResponse<PianoPaginated<_>>>()

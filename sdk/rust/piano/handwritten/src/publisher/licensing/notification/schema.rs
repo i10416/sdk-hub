@@ -101,7 +101,7 @@ impl Notification {
 #[derive(Debug, Deserialize, Clone)]
 pub struct NotificationListResult {
     /// Array of notifications
-    #[serde(alias = "licenseeNotifications")]
+    #[serde(rename = "licenseeNotifications")]
     pub notifications: Vec<Notification>,
 }
 
