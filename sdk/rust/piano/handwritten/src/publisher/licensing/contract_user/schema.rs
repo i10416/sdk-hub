@@ -10,6 +10,104 @@ pub struct CreateContractUserRequest<'a> {
     pub last_name: Option<&'a str>,
 }
 
+/// Request to update an existing contract user
+///
+/// Updates a contract user's details.
+///
+/// # Reference
+///
+/// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2FcontractUser~2Fupdate) for more details.
+#[derive(Debug, Serialize)]
+pub struct UpdateContractUserRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+    /// The contract user's public ID
+    pub contract_user_id: &'a str,
+    /// The user's email address
+    pub email: &'a str,
+    /// The user's first name (optional)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub first_name: Option<&'a str>,
+    /// The user's last name (optional)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_name: Option<&'a str>,
+}
+
+impl<'a> UpdateContractUserRequest<'a> {
+    /// Create a new update contract user request
+    pub fn new(contract_id: &'a str, contract_user_id: &'a str, email: &'a str) -> Self {
+        Self {
+            contract_id,
+            contract_user_id,
+            email,
+            first_name: None,
+            last_name: None,
+        }
+    }
+
+    /// Set the first name
+    pub fn with_first_name(mut self, first_name: &'a str) -> Self {
+        self.first_name = Some(first_name);
+        self
+    }
+
+    /// Set the last name
+    pub fn with_last_name(mut self, last_name: &'a str) -> Self {
+        self.last_name = Some(last_name);
+        self
+    }
+}
+
+/// Request to remove a contract user
+///
+/// Removes a contract user from a given contract.
+///
+/// # Reference
+///
+/// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2FcontractUser~2Fremove) for more details.
+#[derive(Debug, Serialize)]
+pub struct RemoveContractUserRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+    /// The contract user's public ID
+    pub contract_user_id: &'a str,
+}
+
+impl<'a> RemoveContractUserRequest<'a> {
+    /// Create a new remove contract user request
+    pub fn new(contract_id: &'a str, contract_user_id: &'a str) -> Self {
+        Self {
+            contract_id,
+            contract_user_id,
+        }
+    }
+}
+
+/// Request to revoke a contract user's access
+///
+/// Revokes access of a contract user.
+///
+/// # Reference
+///
+/// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2FcontractUser~2Frevoke) for more details.
+#[derive(Debug, Serialize)]
+pub struct RevokeContractUserRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+    /// The contract user's public ID
+    pub contract_user_id: &'a str,
+}
+
+impl<'a> RevokeContractUserRequest<'a> {
+    /// Create a new revoke contract user request
+    pub fn new(contract_id: &'a str, contract_user_id: &'a str) -> Self {
+        Self {
+            contract_id,
+            contract_user_id,
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Clone)]
 pub(super) struct ContractUserResult {
     #[serde(alias = "ContractUser")]

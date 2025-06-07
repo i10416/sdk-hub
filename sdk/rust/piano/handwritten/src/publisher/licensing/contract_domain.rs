@@ -30,7 +30,7 @@ impl PianoAPI {
         &self,
         req: &CreateContractDomainRequest,
     ) -> Result<ContractDomain, crate::Error> {
-        println!("{:?}",self.app_id);
+        println!("{:?}", self.app_id);
         let result = self
             .client
             .post(&format!(

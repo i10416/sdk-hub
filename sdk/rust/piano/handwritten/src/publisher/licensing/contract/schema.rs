@@ -36,6 +36,46 @@ pub struct UpdateContractRequest<'a> {
     pub schedule_id: Option<&'a str>,
 }
 
+/// Request to archive a contract
+///
+/// Archives a contract, making it inactive while preserving its data.
+///
+/// # Reference
+///
+/// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2Fcontract~2Farchive) for more details.
+#[derive(Debug, Serialize)]
+pub struct ArchiveContractRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+}
+
+impl<'a> ArchiveContractRequest<'a> {
+    /// Create a new archive contract request
+    pub fn new(contract_id: &'a str) -> Self {
+        Self { contract_id }
+    }
+}
+
+/// Request to deactivate a contract
+///
+/// Deactivates a contract, temporarily disabling it.
+///
+/// # Reference
+///
+/// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2Fcontract~2Fdeactivate) for more details.
+#[derive(Debug, Serialize)]
+pub struct DeactivateContractRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+}
+
+impl<'a> DeactivateContractRequest<'a> {
+    /// Create a new deactivate contract request
+    pub fn new(contract_id: &'a str) -> Self {
+        Self { contract_id }
+    }
+}
+
 #[derive(Debug, Deserialize, Clone)]
 pub struct ListContractResult {
     pub contracts: Vec<Contract>,
