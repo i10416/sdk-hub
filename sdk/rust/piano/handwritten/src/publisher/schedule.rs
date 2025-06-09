@@ -5,11 +5,12 @@ pub use self::schema::*;
 use crate::{PianoAPI, PianoResponse};
 impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
-    pub async fn get_schedule(&self) -> Result<Option<Schedule>, crate::Error> {
+    pub async fn get_schedule(&self, schedule_id: &str) -> Result<Option<Schedule>, crate::Error> {
         let result = self
             .client
             .get(format!("{}/publisher/schedule/get", self.endpoint,))
             .query(&[("aid", &self.app_id)])
+            .query(&[("schedule_id", schedule_id)])
             .send()
             .await?
             .json::<PianoResponse<ScheduleResult>>()

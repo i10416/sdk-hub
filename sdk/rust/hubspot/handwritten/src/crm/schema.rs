@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct PropertyValue {
     #[serde(default)]
     versions: Vec<PropertyValueVersion>,
+    #[serde(default)]
     value: String,
     source: String,
     timestamp: u64,
@@ -86,6 +87,7 @@ impl PropertyValue {
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValueVersion {
     name: String,
+    #[serde(default)]
     value: String,
     source: String,
     timestamp: u64,
