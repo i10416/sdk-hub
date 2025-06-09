@@ -1,0 +1,27 @@
+{
+  "code": 0,
+  "ts": 1749483991,
+  "app_features": {
+    "my_account": {
+      "enabled": true
+    },
+    "composer": {
+      "enabled": true
+    },
+    "subscription_restrictions": {
+      "allow_switch_payment_method": true,
+      "allow_enable_auto_renew": true,
+      "allow_change_next_bill_date": true,
+      "allow_scheduler_renewals": false,
+      "allow_future_renewals": false,
+      "allow_verify_now": false,
+      "allow_activate_now": false
+    },
+    "redemption_page": {
+      "enabled": false
+    },
+    "is_payment_mock_enabled": false,
+    "is_publisher_dashboard_localization_enabled": true,
+    "is_checkout_authentication_in_separate_state": true
+  }
+} 

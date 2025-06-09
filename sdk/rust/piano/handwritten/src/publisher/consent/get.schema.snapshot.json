@@ -1,0 +1,16 @@
+{
+  "code": 0,
+  "ts": 1749484008,
+  "consent": {
+    "consent_id": "***MASKED***",
+    "field_name": "***MASKED***",
+    "field_id": "***MASKED***",
+    "display_text": "***MASKED***",
+    "error_message": "***MASKED***",
+    "type": "registration",
+    "pre_checked": true,
+    "required": true,
+    "enabled": true,
+    "field_id_enabled": false
+  }
+} 

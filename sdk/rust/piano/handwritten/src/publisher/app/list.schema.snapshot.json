@@ -1,0 +1,25 @@
+{
+  "code": 0,
+  "ts": 1749483996,
+  "limit": 1,
+  "offset": 0,
+  "total": 1,
+  "count": 1,
+  "apps": [
+    {
+      "aid": "***MASKED***",
+      "default_lang": "en_US",
+      "email_lang": "en_US",
+      "details": null,
+      "email": "***MASKED***",
+      "name": "***MASKED***",
+      "user_provider": "piano_id",
+      "url": "***MASKED***",
+      "logo1": "***MASKED***",
+      "logo2": null,
+      "state": "active",
+      "private_key": "",
+      "api_token": ""
+    }
+  ]
+} 

@@ -1,3 +1,4 @@
+use crate::PianoPaginated;
 use serde::{Deserialize, Serialize};
 
 /// Request to get app details by app ID
@@ -13,10 +14,48 @@ impl GetAppRequest {
     }
 }
 
+/// Request to get app features
+#[derive(Debug, Serialize, Default)]
+pub struct GetAppFeaturesRequest {
+    // aid is passed as query parameter and is handled by the API client
+}
+
+impl GetAppFeaturesRequest {
+    /// Create a new get app features request
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+/// Request to list apps
+#[derive(Debug, Serialize, Default)]
+pub struct ListAppsRequest {
+    // No parameters needed for list apps endpoint
+}
+
+impl ListAppsRequest {
+    /// Create a new list apps request
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
 /// Response wrapper for app get operations
 #[derive(Debug, Deserialize, Clone)]
 pub struct AppResult {
     pub app: App,
+}
+
+/// Response wrapper for app features operations  
+#[derive(Debug, Deserialize, Clone)]
+pub struct AppFeaturesResult {
+    pub app_features: AppFeatures,
+}
+
+/// Response wrapper for app list operations
+#[derive(Debug, Deserialize, Clone)]
+pub struct AppListResult {
+    pub apps: Vec<App>,
 }
 
 /// A Piano application object
@@ -48,6 +87,65 @@ pub struct App {
     pub private_key: String,
     /// API token (empty for security reasons)
     pub api_token: String,
+}
+
+/// App features configuration
+#[derive(Debug, Deserialize, Clone)]
+pub struct AppFeatures {
+    /// My account feature configuration
+    pub my_account: MyAccountFeature,
+    /// Composer feature configuration
+    pub composer: ComposerFeature,
+    /// Subscription restrictions configuration
+    pub subscription_restrictions: SubscriptionRestrictionsFeature,
+    /// Redemption page feature configuration
+    pub redemption_page: RedemptionPageFeature,
+    /// Whether a mock provider is enabled instead of real payment providers
+    pub is_payment_mock_enabled: bool,
+    /// Whether publisher dashboard localization is enabled
+    pub is_publisher_dashboard_localization_enabled: bool,
+    /// Whether checkout authentication in separate state
+    pub is_checkout_authentication_in_separate_state: bool,
+}
+
+/// My account feature configuration
+#[derive(Debug, Deserialize, Clone)]
+pub struct MyAccountFeature {
+    /// Whether my account feature is enabled
+    pub enabled: bool,
+}
+
+/// Composer feature configuration
+#[derive(Debug, Deserialize, Clone)]
+pub struct ComposerFeature {
+    /// Whether composer feature is enabled
+    pub enabled: bool,
+}
+
+/// Subscription restrictions feature configuration
+#[derive(Debug, Deserialize, Clone)]
+pub struct SubscriptionRestrictionsFeature {
+    /// Whether users can switch payment method
+    pub allow_switch_payment_method: bool,
+    /// Whether users can enable auto renew
+    pub allow_enable_auto_renew: bool,
+    /// Whether users can change next bill date
+    pub allow_change_next_bill_date: bool,
+    /// Whether scheduler renewals are allowed
+    pub allow_scheduler_renewals: bool,
+    /// Whether future renewals are allowed
+    pub allow_future_renewals: bool,
+    /// Whether verify now is allowed
+    pub allow_verify_now: bool,
+    /// Whether activate now is allowed
+    pub allow_activate_now: bool,
+}
+
+/// Redemption page feature configuration
+#[derive(Debug, Deserialize, Clone)]
+pub struct RedemptionPageFeature {
+    /// Whether redemption page feature is enabled
+    pub enabled: bool,
 }
 
 /// The user token provider enum
@@ -141,6 +239,43 @@ impl App {
     }
 }
 
+impl AppFeatures {
+    /// Check if my account feature is enabled
+    pub fn is_my_account_enabled(&self) -> bool {
+        self.my_account.enabled
+    }
+
+    /// Check if composer feature is enabled
+    pub fn is_composer_enabled(&self) -> bool {
+        self.composer.enabled
+    }
+
+    /// Check if redemption page feature is enabled
+    pub fn is_redemption_page_enabled(&self) -> bool {
+        self.redemption_page.enabled
+    }
+
+    /// Check if payment mock is enabled
+    pub fn is_payment_mock_enabled(&self) -> bool {
+        self.is_payment_mock_enabled
+    }
+
+    /// Check if dashboard localization is enabled
+    pub fn is_dashboard_localization_enabled(&self) -> bool {
+        self.is_publisher_dashboard_localization_enabled
+    }
+
+    /// Check if checkout authentication in separate state is enabled
+    pub fn is_checkout_authentication_in_separate_state(&self) -> bool {
+        self.is_checkout_authentication_in_separate_state
+    }
+
+    /// Get subscription restrictions
+    pub fn subscription_restrictions(&self) -> &SubscriptionRestrictionsFeature {
+        &self.subscription_restrictions
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -202,6 +337,46 @@ mod tests {
     }
 
     #[test]
+    fn test_app_features_deserialization() {
+        let json = serde_json::json!({
+            "my_account": {
+                "enabled": true
+            },
+            "composer": {
+                "enabled": true
+            },
+            "subscription_restrictions": {
+                "allow_switch_payment_method": true,
+                "allow_enable_auto_renew": true,
+                "allow_change_next_bill_date": true,
+                "allow_scheduler_renewals": false,
+                "allow_future_renewals": false,
+                "allow_verify_now": false,
+                "allow_activate_now": false
+            },
+            "redemption_page": {
+                "enabled": false
+            },
+            "is_payment_mock_enabled": false,
+            "is_publisher_dashboard_localization_enabled": true,
+            "is_checkout_authentication_in_separate_state": true
+        });
+
+        let features: AppFeatures =
+            serde_json::from_value(json).expect("Failed to deserialize app features");
+        assert!(features.is_my_account_enabled());
+        assert!(features.is_composer_enabled());
+        assert!(!features.is_redemption_page_enabled());
+        assert!(!features.is_payment_mock_enabled());
+        assert!(features.is_dashboard_localization_enabled());
+        assert!(features.is_checkout_authentication_in_separate_state());
+
+        let restrictions = features.subscription_restrictions();
+        assert!(restrictions.allow_switch_payment_method);
+        assert!(!restrictions.allow_scheduler_renewals);
+    }
+
+    #[test]
     fn sanity_check_get_app_codec() {
         let snapshot = include_str!("./get.schema.snapshot.json");
         let value = serde_json::from_str::<PianoResponse<AppResult>>(snapshot);
@@ -221,6 +396,57 @@ mod tests {
                 assert_eq!(app.email(), "***MASKED***");
                 assert!(app.is_active());
                 assert!(matches!(app.user_provider(), UserProvider::PianoId));
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
+
+    #[test]
+    fn sanity_check_get_app_features_codec() {
+        let snapshot = include_str!("./features.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<AppFeaturesResult>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize app features response: {:?}",
+            value.err()
+        );
+
+        let response = value.unwrap();
+        match response {
+            PianoResponse::Succeed(data) => {
+                let features = &data.app_features;
+                assert!(features.is_my_account_enabled());
+                assert!(features.is_composer_enabled());
+                assert!(!features.is_redemption_page_enabled());
+            }
+            PianoResponse::Failure { code, message, .. } => {
+                panic!("Expected success but got failure: {} - {}", code, message);
+            }
+        }
+    }
+
+    #[test]
+    fn sanity_check_list_apps_codec() {
+        let snapshot = include_str!("./list.schema.snapshot.json");
+        let value = serde_json::from_str::<PianoResponse<PianoPaginated<AppListResult>>>(snapshot);
+
+        assert!(
+            value.is_ok(),
+            "Failed to deserialize app list response: {:?}",
+            value.err()
+        );
+
+        let response = value.unwrap();
+        match response {
+            PianoResponse::Succeed(data) => {
+                assert_eq!(data.value.apps.len(), 1);
+                let app = &data.value.apps[0];
+                assert_eq!(app.aid(), "***MASKED***");
+                assert_eq!(app.name(), "***MASKED***");
+                assert!(app.is_active());
             }
             PianoResponse::Failure { code, message, .. } => {
                 panic!("Expected success but got failure: {} - {}", code, message);
