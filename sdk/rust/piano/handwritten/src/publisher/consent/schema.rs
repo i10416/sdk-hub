@@ -1,4 +1,3 @@
-use crate::PianoPaginated;
 use serde::{Deserialize, Serialize};
 
 /// Request to list consent box configs
@@ -159,6 +158,7 @@ impl Consent {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::PianoPaginated;
     use crate::PianoResponse;
 
     #[test]

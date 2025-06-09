@@ -1,4 +1,3 @@
-use crate::PianoPaginated;
 use serde::{Deserialize, Serialize};
 
 /// Request to get app details by app ID
@@ -46,7 +45,7 @@ pub struct AppResult {
     pub app: App,
 }
 
-/// Response wrapper for app features operations  
+/// Response wrapper for app features operations
 #[derive(Debug, Deserialize, Clone)]
 pub struct AppFeaturesResult {
     pub app_features: AppFeatures,
@@ -279,6 +278,7 @@ impl AppFeatures {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::PianoPaginated;
     use crate::PianoResponse;
 
     #[test]

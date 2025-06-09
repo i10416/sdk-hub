@@ -19,7 +19,7 @@
 //! use piano_handwritten_api::{
 //!     publisher::{
 //!         app::{GetAppRequest, GetAppFeaturesRequest},
-//!         user::{ListUsersRequest},
+//!         user::{ListUserRequest},
 //!         team::{ListTeamRequest},
 //!     },
 //!     PianoAPI,
@@ -32,24 +32,24 @@
 //!
 //!     // Get application details
 //!     let app_request = GetAppRequest::new();
-//!     let app = client.get_app(&app_request).await?;
+//!     let app = client.get_app(&app_request).await.expect("Failed to get app");
 //!     println!("App: {} ({})", app.app.name(), app.app.aid());
 //!
 //!     // Get application features
 //!     let features_request = GetAppFeaturesRequest::new();
-//!     let features = client.get_app_features(&features_request).await?;
+//!     let features = client.get_app_features(&features_request).await.expect("Failed to get app features");
 //!     println!("My Account enabled: {}", features.app_features.is_my_account_enabled());
 //!
 //!     // List team members
 //!     let team_request = ListTeamRequest::new();
-//!     let team = client.list_team_members(&team_request).await?;
+//!     let team = client.list_team_members(&team_request).await.expect("Failed to list team members");
 //!     println!("Team size: {}", team.team_members.len());
 //!
 //!     // List users with pagination
-//!     let users_request = ListUsersRequest::new()
+//!     let users_request = ListUserRequest::new()
 //!         .with_limit(10)
 //!         .with_offset(0);
-//!     let users = client.list_users(&users_request).await?;
+//!     let users = client.list_users(&users_request).await.expect("Failed to list users");
 //!     println!("Found {} users (total: {})", users.value.users.len(), users.total);
 //!
 //!     Ok(())
