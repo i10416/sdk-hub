@@ -173,7 +173,7 @@ impl PianoAPI {
     #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
     pub async fn remove_and_revoke_contract_user<'a>(
         &self,
-        req: &RevokeContractUserRequest<'a>,
+        req: &RemoveAndRevokeContractUserRequest<'a>,
     ) -> Result<(), crate::Error> {
         self.client
             .post(format!(

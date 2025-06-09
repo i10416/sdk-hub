@@ -108,6 +108,24 @@ impl<'a> RevokeContractUserRequest<'a> {
     }
 }
 
+#[derive(Debug, Serialize)]
+pub struct RemoveAndRevokeContractUserRequest<'a> {
+    /// The public ID of the contract
+    pub contract_id: &'a str,
+    /// The contract user's public ID
+    pub contract_user_id: &'a str,
+}
+
+impl<'a> RemoveAndRevokeContractUserRequest<'a> {
+    /// Create a new revoke contract user request
+    pub fn new(contract_id: &'a str, contract_user_id: &'a str) -> Self {
+        Self {
+            contract_id,
+            contract_user_id,
+        }
+    }
+}
+
 #[derive(Debug, Deserialize, Clone)]
 pub(super) struct ContractUserResult {
     #[serde(alias = "ContractUser")]
