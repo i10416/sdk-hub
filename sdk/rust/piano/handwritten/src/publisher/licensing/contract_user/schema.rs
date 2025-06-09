@@ -124,7 +124,7 @@ pub struct ContractUser {
     status: ContractUserStatus,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum ContractUserStatus {
     INVALID,
