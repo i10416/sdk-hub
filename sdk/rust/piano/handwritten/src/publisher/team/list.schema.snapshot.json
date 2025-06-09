@@ -1,0 +1,68 @@
+{
+  "code": 0,
+  "ts": 1749480242,
+  "limit": 27,
+  "offset": 0,
+  "total": 27,
+  "count": 27,
+  "team_members": [
+    {
+      "first_name": "***MASKED***",
+      "last_name": "***MASKED***",
+      "personal_name": "***MASKED***",
+      "email": "***MASKED***",
+      "uid": "***MASKED***",
+      "create_date": 1623915795,
+      "last_login": 1749195551,
+      "invitation_expired": false,
+      "permissions": [
+        "publisher_admin",
+        "manage_business",
+        "manage_promotions"
+      ]
+    },
+    {
+      "first_name": "***MASKED***",
+      "last_name": "***MASKED***",
+      "personal_name": "***MASKED***",
+      "email": "***MASKED***",
+      "uid": "***MASKED***",
+      "create_date": 1744001292,
+      "invitation_expired": true,
+      "permissions": [
+        "publisher_admin",
+        "manage_business",
+        "cancel_subscription",
+        "edit_templates",
+        "financial_reports",
+        "manage_api",
+        "manage_checkout_flows",
+        "manage_composer",
+        "manage_cookie_manager",
+        "manage_cxense_site",
+        "manage_esp_account",
+        "manage_esp_site",
+        "manage_global_custom_fields",
+        "manage_localization",
+        "manage_notifications",
+        "manage_offers",
+        "manage_paywalls",
+        "manage_promotions",
+        "manage_resources",
+        "manage_site_licenses",
+        "manage_team",
+        "manage_templates",
+        "manage_terms",
+        "manage_upgrade_options",
+        "manage_users",
+        "manage_webhooks",
+        "marketing_full",
+        "marketing_limited",
+        "non_financial_reports",
+        "refund_payment",
+        "revoke_access",
+        "view_composer"
+      ]
+    }
+  ]
+}

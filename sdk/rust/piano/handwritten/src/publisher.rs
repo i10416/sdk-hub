@@ -4,4 +4,5 @@ pub mod licensing;
 pub mod promotion;
 pub mod resource;
 pub mod schedule;
+pub mod team;
 pub mod user;
