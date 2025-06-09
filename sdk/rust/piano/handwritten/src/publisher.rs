@@ -1,4 +1,5 @@
 pub mod access;
+pub mod app;
 pub mod gdpr;
 pub mod licensing;
 pub mod promotion;
