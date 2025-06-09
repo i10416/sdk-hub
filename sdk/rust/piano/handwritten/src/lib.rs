@@ -136,6 +136,8 @@ impl<T: Clone> PianoResponse<T> {
                     61028 => Ok(None),
                     // contract ip domain not found
                     61035 => Ok(None),
+                    // contract user not found
+                    61020 => Ok(None),
                     // user not found
                     2004 => Ok(None),
                     61027 => Result::Err(Box::new(std::io::Error::new(

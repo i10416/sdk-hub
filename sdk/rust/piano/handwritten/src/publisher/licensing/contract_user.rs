@@ -85,6 +85,7 @@ impl PianoAPI {
     /// Remove a contract user from a contract
     ///
     /// Removes a contract user from the specified contract.
+    /// This does NOT return error event if user status is pending(user has not redeemed the access yet).
     ///
     /// # Arguments
     ///
@@ -120,6 +121,7 @@ impl PianoAPI {
     /// Revoke access of a contract user
     ///
     /// Revokes the access of a contract user without removing them from the contract.
+    /// This returns error if user status is pending(user has not redeemed the access yet).
     ///
     /// # Arguments
     ///
@@ -140,6 +142,42 @@ impl PianoAPI {
         self.client
             .post(format!(
                 "{}/publisher/licensing/contractUser/revoke",
+                self.endpoint,
+            ))
+            .query(&[("aid", &self.app_id)])
+            .form(req)
+            .send()
+            .await?
+            .json::<PianoResponse<Empty>>()
+            .await?
+            .value()?;
+        Ok(())
+    }
+
+    /// Revoke access of a contract user
+    ///
+    /// Revokes the access of a contract user and remove them from the contract.
+    /// This does NOT return error event if user status is pending(user has not redeemed the access yet).
+    ///
+    /// # Arguments
+    ///
+    /// * `req` - The revoke contract user request
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(())` on successful revocation and removal.
+    ///
+    /// # Reference
+    ///
+    /// See the [Piano API documentation](https://docs.piano.io/api?endpoint=post~2F~2Fpublisher~2Flicensing~2FcontractUser~2Frevoke) for more details.
+    #[cfg_attr(feature = "tracing", tracing::instrument(skip(self)))]
+    pub async fn remove_and_revoke_contract_user<'a>(
+        &self,
+        req: &RevokeContractUserRequest<'a>,
+    ) -> Result<(), crate::Error> {
+        self.client
+            .post(format!(
+                "{}/publisher/licensing/contractUser/removeAndRevoke",
                 self.endpoint,
             ))
             .query(&[("aid", &self.app_id)])

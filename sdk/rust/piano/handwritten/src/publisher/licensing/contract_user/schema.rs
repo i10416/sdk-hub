@@ -127,9 +127,13 @@ pub struct ContractUser {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum ContractUserStatus {
+    /// The user has an incorrect email.
     INVALID,
+    /// The User has been invited but has not yet redeemed access.
     PENDING,
+    /// The user has redeemed access
     ACTIVE,
+    /// A member of your team has decided to revoke the user's access.
     REVOKED,
 }
 
