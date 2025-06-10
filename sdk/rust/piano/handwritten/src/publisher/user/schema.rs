@@ -241,110 +241,645 @@ pub enum Source {
     VX,
     CF,
 }
-#[derive(Debug, Serialize, Default)]
-pub struct CustomFieldQuery {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    condition: Option<Condition>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    data_type: Option<CustomFieldDataType>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    response_time: Option<ResponseTimeQuery>,
-    #[serde(rename = "fieldTitle")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    field_title: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    enabled: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    field_name: Option<String>,
+
+/// See https://docs.piano.io/faq-article/how-to-search-for-users-who-updated-their-custom-fields-during-a-daterange-via-api/
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum ResponseTimeQuery {
+    #[serde(rename = "BETWEEN")]
+    Between {
+        /// %Y-%m-%d
+        more: String,
+        /// %Y-%m-%d
+        less: String,
+    },
+    #[serde(rename = "MORE")]
+    More {
+        /// %Y-%m-%d
+        more: String,
+    },
+    #[serde(rename = "MORE")]
+    Less {
+        /// %Y-%m-%d
+        less: String,
+    },
+    #[serde(rename = "CURRENT")]
+    Current,
+    #[serde(rename = "EQUAL")]
+    Equal {
+        /// %Y-%m-%d
+        equal: String,
+    },
+}
+
+impl ResponseTimeQuery {
+    pub fn between(more: &str, less: &str) -> Self {
+        Self::Between {
+            more: more.to_string(),
+            less: less.to_string(),
+        }
+    }
+    pub fn more(more: &str) -> Self {
+        Self::More {
+            more: more.to_string(),
+        }
+    }
+    pub fn less(less: &str) -> Self {
+        Self::Less {
+            less: less.to_string(),
+        }
+    }
+    pub fn equal(equal: &str) -> Self {
+        Self::Equal {
+            equal: equal.to_string(),
+        }
+    }
+    pub fn current() -> Self {
+        Self::Current
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "data_type")]
+pub enum CustomFieldQuery {
+    #[serde(rename = "SINGLE_SELECT_LIST")]
+    SingleSelectList {
+        field_name: String,
+        condition: SingleSelectListCondition,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        response_time: Option<ResponseTimeQuery>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        field_title: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enabled: Option<bool>,
+    },
+    #[serde(rename = "TEXT")]
+    Text {
+        field_name: String,
+        condition: TextCondition,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        response_time: Option<ResponseTimeQuery>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        field_title: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enabled: Option<bool>,
+    },
+    #[serde(rename = "BOOLEAN")]
+    Boolean {
+        field_name: String,
+        condition: BooleanCondition,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        response_time: Option<ResponseTimeQuery>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        field_title: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enabled: Option<bool>,
+    },
+    #[serde(rename = "NUMBER")]
+    Number {
+        field_name: String,
+        condition: NumberCondition,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        response_time: Option<ResponseTimeQuery>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        field_title: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enabled: Option<bool>,
+    },
+    #[serde(rename = "ISO_DATE")]
+    ISODate {
+        field_name: String,
+        condition: DateCondition,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        response_time: Option<ResponseTimeQuery>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        field_title: Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        enabled: Option<bool>,
+    },
 }
 
 impl CustomFieldQuery {
-    /// Create a new custom field query.
-    pub fn new() -> Self {
-        Self::default()
+    pub fn data_type(&self) -> CustomFieldDataType {
+        match self {
+            Self::SingleSelectList { .. } => CustomFieldDataType::SingleSelectList,
+            Self::Text { .. } => CustomFieldDataType::Text,
+            Self::Boolean { .. } => CustomFieldDataType::Boolean,
+            Self::Number { .. } => CustomFieldDataType::Number,
+            Self::ISODate { .. } => CustomFieldDataType::ISODate,
+        }
     }
-
-    /// Set the condition for the custom field query.
-    pub fn with_condition(mut self, condition: Condition) -> Self {
-        self.condition = Some(condition);
-        self
+    pub fn field_name(&self) -> &str {
+        match self {
+            Self::SingleSelectList { field_name, .. } => field_name,
+            Self::Text { field_name, .. } => field_name,
+            Self::Boolean { field_name, .. } => field_name,
+            Self::Number { field_name, .. } => field_name,
+            Self::ISODate { field_name, .. } => field_name,
+        }
     }
-
-    /// Set the data type for the custom field query.
-    pub fn with_data_type(mut self, data_type: CustomFieldDataType) -> Self {
-        self.data_type = Some(data_type);
-        self
+    pub fn response_time(&self) -> Option<&ResponseTimeQuery> {
+        match self {
+            Self::SingleSelectList { response_time, .. } => response_time.as_ref(),
+            Self::Text { response_time, .. } => response_time.as_ref(),
+            Self::Boolean { response_time, .. } => response_time.as_ref(),
+            Self::Number { response_time, .. } => response_time.as_ref(),
+            Self::ISODate { response_time, .. } => response_time.as_ref(),
+        }
     }
-
-    /// Set the response time query for the custom field query.
-    pub fn with_response_time(mut self, response_time: ResponseTimeQuery) -> Self {
-        self.response_time = Some(response_time);
-        self
+    pub fn enabled(&self) -> Option<&bool> {
+        match self {
+            Self::SingleSelectList { enabled, .. } => enabled.as_ref(),
+            Self::Text { enabled, .. } => enabled.as_ref(),
+            Self::Boolean { enabled, .. } => enabled.as_ref(),
+            Self::Number { enabled, .. } => enabled.as_ref(),
+            Self::ISODate { enabled, .. } => enabled.as_ref(),
+        }
     }
-
-    /// Set the field title for the custom field query.
-    pub fn with_field_title(mut self, field_title: String) -> Self {
-        self.field_title = Some(field_title);
-        self
+    pub fn with_field_title(self, field_title: &str) -> Self {
+        match self {
+            Self::SingleSelectList {
+                condition,
+                field_name,
+                response_time,
+                enabled,
+                ..
+            } => Self::SingleSelectList {
+                field_title: Some(field_title.to_string()),
+                condition,
+                field_name,
+                response_time,
+                enabled,
+            },
+            Self::Text {
+                condition,
+                field_name,
+                response_time,
+                enabled,
+                ..
+            } => Self::Text {
+                field_title: Some(field_title.to_string()),
+                condition,
+                field_name,
+                response_time,
+                enabled,
+            },
+            Self::Boolean {
+                condition,
+                field_name,
+                response_time,
+                enabled,
+                ..
+            } => Self::Boolean {
+                field_title: Some(field_title.to_string()),
+                condition,
+                field_name,
+                response_time,
+                enabled,
+            },
+            Self::Number {
+                condition,
+                field_name,
+                response_time,
+                enabled,
+                ..
+            } => Self::Number {
+                field_title: Some(field_title.to_string()),
+                condition,
+                field_name,
+                response_time,
+                enabled,
+            },
+            Self::ISODate {
+                condition,
+                field_name,
+                response_time,
+                enabled,
+                ..
+            } => Self::ISODate {
+                field_title: Some(field_title.to_string()),
+                condition,
+                field_name,
+                response_time,
+                enabled,
+            },
+        }
     }
-
-    /// Set the enabled flag for the custom field query.
-    pub fn with_enabled(mut self, enabled: bool) -> Self {
-        self.enabled = Some(enabled);
-        self
+    pub fn with_response_time(self, response_time: ResponseTimeQuery) -> Self {
+        match self {
+            Self::SingleSelectList {
+                field_name,
+                condition,
+                field_title,
+                enabled,
+                ..
+            } => Self::SingleSelectList {
+                response_time: Some(response_time),
+                field_name,
+                condition,
+                field_title,
+                enabled,
+            },
+            Self::Text {
+                field_name,
+                condition,
+                field_title,
+                enabled,
+                ..
+            } => Self::Text {
+                response_time: Some(response_time),
+                field_name,
+                condition,
+                field_title,
+                enabled,
+            },
+            Self::Boolean {
+                field_name,
+                condition,
+                field_title,
+                enabled,
+                ..
+            } => Self::Boolean {
+                response_time: Some(response_time),
+                field_name,
+                condition,
+                field_title,
+                enabled,
+            },
+            Self::Number {
+                field_name,
+                condition,
+                field_title,
+                enabled,
+                ..
+            } => Self::Number {
+                response_time: Some(response_time),
+                field_name,
+                condition,
+                field_title,
+                enabled,
+            },
+            Self::ISODate {
+                field_name,
+                condition,
+                field_title,
+                enabled,
+                ..
+            } => Self::ISODate {
+                response_time: Some(response_time),
+                field_name,
+                condition,
+                field_title,
+                enabled,
+            },
+        }
     }
-
-    /// Set the field name for the custom field query.
-    pub fn with_field_name(mut self, field_name: &str) -> Self {
-        self.field_name = Some(field_name.to_string());
-        self
+    pub fn number_eq(field_name: &str, value: &str) -> Self {
+        Self::Number {
+            field_name: field_name.to_string(),
+            condition: NumberCondition::equal(value),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn number_between(field_name: &str, more: &str, less: &str) -> Self {
+        Self::Number {
+            field_name: field_name.to_string(),
+            condition: NumberCondition::between(more, less),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn number_more(field_name: &str, more: &str) -> Self {
+        Self::Number {
+            field_name: field_name.to_string(),
+            condition: NumberCondition::more(more),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn number_less(field_name: &str, less: &str) -> Self {
+        Self::Number {
+            field_name: field_name.to_string(),
+            condition: NumberCondition::less(less),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn single_select_list_contains_exact(field_name: &str, value: &str) -> Self {
+        Self::SingleSelectList {
+            field_name: field_name.to_string(),
+            condition: SingleSelectListCondition::Equal {
+                options_equal: ContainExactOne::String {
+                    id: None,
+                    value: value.to_string(),
+                },
+            },
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn text_like(field_name: &str, like: &str) -> Self {
+        Self::Text {
+            field_name: field_name.to_string(),
+            condition: TextCondition::Like {
+                like: like.to_string(),
+            },
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn text_eq(field_name: &str, value: &str) -> Self {
+        Self::Text {
+            field_name: field_name.to_string(),
+            condition: TextCondition::Equal {
+                equal: value.to_string(),
+            },
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn text_empty(field_name: &str) -> Self {
+        Self::Text {
+            field_name: field_name.to_string(),
+            condition: TextCondition::Empty,
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn text_any(field_name: &str) -> Self {
+        Self::Text {
+            field_name: field_name.to_string(),
+            condition: TextCondition::Any,
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn bool_eq(field_name: &str, value: bool) -> Self {
+        Self::Boolean {
+            field_name: field_name.to_string(),
+            condition: BooleanCondition::Equal { equal: value },
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn bool_empty(field_name: &str) -> Self {
+        Self::Boolean {
+            field_name: field_name.to_string(),
+            condition: BooleanCondition::empty(),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn bool_any(field_name: &str) -> Self {
+        Self::Boolean {
+            field_name: field_name.to_string(),
+            condition: BooleanCondition::any(),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn date_between(field_name: &str, more: &str, less: &str) -> Self {
+        Self::ISODate {
+            field_name: field_name.to_string(),
+            condition: DateCondition::between(more, less),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn date_equal(field_name: &str, equal: &str) -> Self {
+        Self::ISODate {
+            field_name: field_name.to_string(),
+            condition: DateCondition::equal(equal),
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
     }
 }
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type")]
-pub enum ResponseTimeQuery {
+pub enum BooleanCondition {
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+    #[serde(rename = "EQUAL")]
+    Equal { equal: bool },
+}
+impl BooleanCondition {
+    pub fn empty() -> Self {
+        Self::Empty
+    }
+    pub fn any() -> Self {
+        Self::Any
+    }
+    pub fn equal(equal: bool) -> Self {
+        Self::Equal { equal }
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum DateCondition {
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+    #[serde(rename = "EQUAL")]
+    Equal {
+        /// format: %Y-%m-%d
+        equal: String,
+    },
+    #[serde(rename = "BETWEEN")]
+    Between {
+        /// format: %Y-%m-%d
+        more: String,
+        /// format: %Y-%m-%d
+        less: String,
+    },
+}
+impl DateCondition {
+    pub fn empty() -> Self {
+        Self::Empty
+    }
+    pub fn any() -> Self {
+        Self::Any
+    }
+    pub fn equal(equal: &str) -> Self {
+        Self::Equal {
+            equal: equal.to_string(),
+        }
+    }
+    pub fn between(more: &str, less: &str) -> Self {
+        Self::Between {
+            more: more.to_string(),
+            less: less.to_string(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum SingleSelectListCondition {
+    #[serde(rename = "EQUAL")]
+    Equal {
+        #[serde(rename = "optionsEqual")]
+        options_equal: ContainExactOne,
+    },
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(untagged)]
+pub enum ContainExactOne {
+    String {
+        #[serde(skip_serializing_if = "Option::is_none")]
+        id: Option<u32>,
+        value: String,
+    },
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "type")]
+pub enum TextCondition {
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+    #[serde(rename = "LIKE")]
+    Like { like: String },
+    #[serde(rename = "EQUAL")]
+    Equal { equal: String },
+    #[serde(rename = "EXACT_MATCH")]
+    ExactMatch { exact_match: String },
+}
+
+#[derive(Debug, Serialize)]
+pub enum NumberCondition {
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+    #[serde(rename = "EQUAL")]
+    Equal { equal: String },
+    #[serde(rename = "MORE")]
+    More { more: String },
+    #[serde(rename = "LESS")]
+    Less { less: String },
     #[serde(rename = "BETWEEN")]
     Between { more: String, less: String },
-    #[serde(rename = "CURRENT")]
-    Current,
+}
+impl NumberCondition {
+    pub fn empty() -> Self {
+        Self::Empty
+    }
+    pub fn any() -> Self {
+        Self::Any
+    }
+    pub fn equal(equal: &str) -> Self {
+        Self::Equal {
+            equal: equal.to_string(),
+        }
+    }
+    pub fn more(more: &str) -> Self {
+        Self::More {
+            more: more.to_string(),
+        }
+    }
+    pub fn less(less: &str) -> Self {
+        Self::Less {
+            less: less.to_string(),
+        }
+    }
+    pub fn between(more: &str, less: &str) -> Self {
+        Self::Between {
+            more: more.to_string(),
+            less: less.to_string(),
+        }
+    }
+}
+
+impl ContainExactOne {
+    pub fn string(id: u32, value: &str) -> Self {
+        Self::String {
+            id: Some(id),
+            value: value.to_string(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type")]
 pub enum Condition {
+    /// Find the value of type SINGLE_SELECT_LIST with the exact value
     #[serde(rename = "EQUAL")]
     Equal {
         #[serde(rename = "optionsEqual")]
-        options_equal: EqExpr,
+        options_equal: ContainExactOne,
+    },
+    /// Find the value of type SINGLE_SELECT_LIST, MULTI_SELECT_LIST, or TEXT that is empty
+    #[serde(rename = "EMPTY")]
+    Empty,
+    #[serde(rename = "ANY")]
+    Any,
+    /// Find the value of type MULTI_SELECT_LIST that contains at least one element in the list of options
+    #[serde(rename = "IN")]
+    In {
+        #[serde(rename = "optionsIn")]
+        options_in: Vec<OptionIn>,
     },
 }
-
+#[derive(Debug, Serialize)]
+pub struct OptionIn {
+    value: String,
+}
+impl OptionIn {
+    pub fn new(value: &str) -> Self {
+        Self {
+            value: value.to_string(),
+        }
+    }
+}
 impl Condition {
+    pub fn empty() -> Self {
+        Self::Empty
+    }
+    pub fn any() -> Self {
+        Self::Any
+    }
+    pub fn in_options(options: &[&str]) -> Self {
+        Self::In {
+            options_in: options.iter().map(|o| OptionIn::new(o)).collect(),
+        }
+    }
     pub fn string_equals(id: u32, value: &str) -> Self {
         Self::Equal {
-            options_equal: EqExpr::String {
-                id,
+            options_equal: ContainExactOne::String {
+                id: Some(id),
                 value: value.to_string(),
             },
         }
     }
 }
 
-#[derive(Debug, Serialize)]
-#[serde(untagged)]
-pub enum EqExpr {
-    String { id: u32, value: String },
-}
-
-impl EqExpr {
-    pub fn string(id: u32, value: &str) -> Self {
-        Self::String {
-            id,
-            value: value.to_string(),
-        }
-    }
-}
 impl<'a> SearchUserRequest<'a> {
     /// Create a new user search request.
     pub fn new() -> Self {
@@ -491,6 +1026,8 @@ impl CustomField {
                 ),
             },
             CustomFieldDataType::Boolean
+            | CustomFieldDataType::MultiSelectList
+            | CustomFieldDataType::Number
             | CustomFieldDataType::ISODate
             | CustomFieldDataType::Text => None,
         }
@@ -499,7 +1036,9 @@ impl CustomField {
         match self.data_type() {
             CustomFieldDataType::Boolean => self.value().unwrap_or_default().parse::<bool>().ok(),
             CustomFieldDataType::ISODate
+            | CustomFieldDataType::Number
             | CustomFieldDataType::SingleSelectList
+            | CustomFieldDataType::MultiSelectList
             | CustomFieldDataType::Text => None,
         }
     }
@@ -630,6 +1169,10 @@ pub enum CustomFieldDataType {
     ISODate,
     #[serde(rename = "SINGLE_SELECT_LIST")]
     SingleSelectList,
+    #[serde(rename = "MULTI_SELECT_LIST")]
+    MultiSelectList,
+    #[serde(rename = "NUMBER")]
+    Number,
 }
 
 impl User {
@@ -780,25 +1323,73 @@ mod tests {
                 "value": "[\"**MASKED-A**\"]"
             }
         ]);
-        let value = serde_json::from_value::<Vec<CustomField>>(value).expect("OK");
-        println!("{value:?}")
+        let result = serde_json::from_value::<Vec<CustomField>>(value);
+        assert!(result.is_ok())
+    }
+    #[test]
+    fn sanity_check_single_select_list_custom_field_query_encoding() {
+        let value = serde_json::json!(
+            {
+                "field_name": "occupation_status",
+                "data_type": "SINGLE_SELECT_LIST",
+                "condition": {
+                  "type": "EQUAL",
+                  "optionsEqual": {
+                    "value": "Full-time work"
+                  }
+                }
+              }
+        );
+        let one = serde_json::to_value(&CustomFieldQuery::single_select_list_contains_exact(
+            "occupation_status",
+            "Full-time work",
+        ))
+        .expect("OK");
+        assert_eq!(one, value)
+    }
+    #[test]
+    fn sanity_check_text_custom_field_query_encoding() {
+        let value = serde_json::json!(
+            {
+                "field_name": "Text",
+                "data_type": "TEXT",
+                "condition": {
+                    "type": "LIKE", // or "EQUAL" or "EXACT_MATCH"
+                    "like": "Test"
+                }
+            }
+        );
+        let one = serde_json::to_value(&CustomFieldQuery::text_like("Text", "Test")).expect("OK");
+        assert_eq!(one, value)
+    }
+    #[test]
+    fn sanity_check_date_custom_field_query_encoding() {
+        let value = serde_json::json!(
+                {
+                    "field_name": "age",
+                    "data_type": "ISO_DATE",
+                    "condition": {
+                        "type": "BETWEEN",
+                        "more": "2025-03-03",
+                        "less": "2025-03-12"
+                    }
+                }
+        );
+        let result = serde_json::to_value(&CustomFieldQuery::date_between(
+            "age",
+            "2025-03-03",
+            "2025-03-12",
+        ))
+        .expect("OK");
+        assert_eq!(result, value)
     }
     #[test]
     fn sanity_check_custom_field_query_serialization() {
-        let data = CustomFieldQuery {
-            condition: Some(Condition::Equal {
-                options_equal: EqExpr::String {
-                    id: 1,
-                    value: "foo".to_string(),
-                },
-            }),
-            data_type: Some(CustomFieldDataType::SingleSelectList),
-            ..Default::default()
-        };
+        let data = CustomFieldQuery::single_select_list_contains_exact("foo", "foo");
         let str = serde_json::to_string(&data).expect("OK");
         assert_eq!(
             str,
-           "{\"condition\":{\"type\":\"EQUAL\",\"optionsEqual\":{\"id\":1,\"value\":\"foo\"}},\"data_type\":\"SINGLE_SELECT_LIST\"}"
+           "{\"data_type\":\"SINGLE_SELECT_LIST\",\"field_name\":\"foo\",\"condition\":{\"type\":\"EQUAL\",\"optionsEqual\":{\"value\":\"foo\"}}}"
         )
     }
     #[test]
