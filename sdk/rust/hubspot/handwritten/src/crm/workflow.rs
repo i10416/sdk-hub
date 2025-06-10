@@ -29,8 +29,10 @@ pub struct ContactEvent<T> {
     pub properties: T,
     #[serde(default)]
     is_contact: bool,
-    associated_company: Company,
-    associated_owner: Owner,
+    #[serde(default)]
+    associated_company: Option<Company>,
+    #[serde(default)]
+    associated_owner: Option<Owner>,
 }
 
 impl<T> ContactEvent<T> {
@@ -54,12 +56,12 @@ impl<T> ContactEvent<T> {
         self.is_contact
     }
 
-    pub fn associated_company(&self) -> &Company {
-        &self.associated_company
+    pub fn associated_company(&self) -> Option<&Company> {
+        self.associated_company.as_ref()
     }
 
-    pub fn associated_owner(&self) -> &Owner {
-        &self.associated_owner
+    pub fn associated_owner(&self) -> Option<&Owner> {
+        self.associated_owner.as_ref()
     }
 }
 
