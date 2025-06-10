@@ -90,7 +90,8 @@ pub struct PropertyValueVersion {
     name: Option<String>,
     #[serde(default)]
     value: String,
-    source: String,
+    #[serde(default)]
+    source: Option<String>,
     timestamp: u64,
     source_id: String,
     request_id: String,
@@ -110,8 +111,8 @@ impl PropertyValueVersion {
     pub fn value(&self) -> &str {
         &self.value
     }
-    pub fn source(&self) -> &str {
-        &self.source
+    pub fn source(&self) -> Option<&str> {
+        self.source.as_deref()
     }
     pub fn timestamp(&self) -> u64 {
         self.timestamp
