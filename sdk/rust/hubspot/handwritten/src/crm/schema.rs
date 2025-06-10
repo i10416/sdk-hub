@@ -86,7 +86,7 @@ impl PropertyValue {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValueVersion {
-    name: String,
+    name: Option<String>,
     #[serde(default)]
     value: String,
     source: String,
@@ -103,8 +103,8 @@ pub struct PropertyValueVersion {
 }
 
 impl PropertyValueVersion {
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn name(&self) -> Option<&str> {
+        self.name.as_deref()
     }
     pub fn value(&self) -> &str {
         &self.value

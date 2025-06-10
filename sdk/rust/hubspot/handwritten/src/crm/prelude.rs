@@ -8,7 +8,7 @@ pub struct Object<T> {
     #[serde(default)]
     pub archived: bool,
 }
-impl <T> Object<T> {
+impl<T> Object<T> {
     pub fn object_id(&self) -> &str {
         &self.id
     }

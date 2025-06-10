@@ -8,7 +8,7 @@ pub struct Object<T> {
     #[serde(rename = "objectId")]
     pub object_id: u64,
     #[serde(default)]
-    pub id:Option<String>,
+    pub id: Option<String>,
     #[serde(rename = "objectTypeId")]
     pub object_type_id: String,
     pub properties: T,

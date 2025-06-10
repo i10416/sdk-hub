@@ -8,7 +8,6 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::crm::prelude::{Association, Object};
 
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ObjectProperties {
     #[serde(rename = "createDate", alias = "createdate")]
