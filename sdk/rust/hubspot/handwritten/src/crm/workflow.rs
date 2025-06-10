@@ -17,11 +17,14 @@ pub struct ObjectEvent<T> {
     pub is_deleted: bool,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
-pub struct ContactVersionEvent<T> {
+pub struct ContactEvent<T> {
+    /// The "vid" is a unique, internal identifier assigned to each contact by HubSpot
     vid: u64,
     canonical_vid: i64,
+    /// This is a unique number assigned to each HubSpot account, also referred to as the "Hub ID".
+    /// It helps determine which HubSpot account the contact belongs to.
     portal_id: u64,
     pub properties: T,
     #[serde(default)]
@@ -30,7 +33,7 @@ pub struct ContactVersionEvent<T> {
     associated_owner: Owner,
 }
 
-impl<T> ContactVersionEvent<T> {
+impl<T> ContactEvent<T> {
     pub fn vid(&self) -> u64 {
         self.vid
     }
@@ -60,7 +63,7 @@ impl<T> ContactVersionEvent<T> {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub struct Company {
     company_id: u64,
@@ -78,7 +81,7 @@ impl Company {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub struct Owner {
     email: String,
