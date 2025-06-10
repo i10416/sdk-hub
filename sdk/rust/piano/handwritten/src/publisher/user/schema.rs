@@ -573,12 +573,7 @@ impl CustomFieldQuery {
     pub fn single_select_list_contains_exact(field_name: &str, value: &str) -> Self {
         Self::SingleSelectList {
             field_name: field_name.to_string(),
-            condition: SingleSelectListCondition::Equal {
-                options_equal: ContainExactOne::String {
-                    id: None,
-                    value: value.to_string(),
-                },
-            },
+            condition: SingleSelectListCondition::options(ContainExactOne::string(value)),
             response_time: None,
             field_title: None,
             enabled: None,
@@ -747,6 +742,27 @@ pub enum SingleSelectListCondition {
     Any,
 }
 
+impl SingleSelectListCondition {
+    pub fn as_field_query(self, field_name: &str) -> CustomFieldQuery {
+        CustomFieldQuery::SingleSelectList {
+            field_name: field_name.to_string(),
+            condition: self,
+            response_time: None,
+            field_title: None,
+            enabled: None,
+        }
+    }
+    pub fn options(options_equal: ContainExactOne) -> Self {
+        Self::Equal { options_equal }
+    }
+    pub fn empty() -> Self {
+        Self::Empty
+    }
+    pub fn any() -> Self {
+        Self::Any
+    }
+}
+
 #[derive(Debug, Serialize)]
 #[serde(untagged)]
 pub enum ContainExactOne {
@@ -818,64 +834,16 @@ impl NumberCondition {
 }
 
 impl ContainExactOne {
-    pub fn string(id: u32, value: &str) -> Self {
+    pub fn string(value: &str) -> Self {
+        Self::String {
+            id: None,
+            value: value.to_string(),
+        }
+    }
+    pub fn string_with_id(id: u32, value: &str) -> Self {
         Self::String {
             id: Some(id),
             value: value.to_string(),
-        }
-    }
-}
-
-#[derive(Debug, Serialize)]
-#[serde(tag = "type")]
-pub enum Condition {
-    /// Find the value of type SINGLE_SELECT_LIST with the exact value
-    #[serde(rename = "EQUAL")]
-    Equal {
-        #[serde(rename = "optionsEqual")]
-        options_equal: ContainExactOne,
-    },
-    /// Find the value of type SINGLE_SELECT_LIST, MULTI_SELECT_LIST, or TEXT that is empty
-    #[serde(rename = "EMPTY")]
-    Empty,
-    #[serde(rename = "ANY")]
-    Any,
-    /// Find the value of type MULTI_SELECT_LIST that contains at least one element in the list of options
-    #[serde(rename = "IN")]
-    In {
-        #[serde(rename = "optionsIn")]
-        options_in: Vec<OptionIn>,
-    },
-}
-#[derive(Debug, Serialize)]
-pub struct OptionIn {
-    value: String,
-}
-impl OptionIn {
-    pub fn new(value: &str) -> Self {
-        Self {
-            value: value.to_string(),
-        }
-    }
-}
-impl Condition {
-    pub fn empty() -> Self {
-        Self::Empty
-    }
-    pub fn any() -> Self {
-        Self::Any
-    }
-    pub fn in_options(options: &[&str]) -> Self {
-        Self::In {
-            options_in: options.iter().map(|o| OptionIn::new(o)).collect(),
-        }
-    }
-    pub fn string_equals(id: u32, value: &str) -> Self {
-        Self::Equal {
-            options_equal: ContainExactOne::String {
-                id: Some(id),
-                value: value.to_string(),
-            },
         }
     }
 }
