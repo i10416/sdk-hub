@@ -1,7 +1,7 @@
 mod schema;
 pub use schema::*;
+pub mod contact;
 pub mod prelude;
-
 #[cfg(feature = "crm-v3")]
 pub mod v3;
 #[cfg(feature = "crm-v4")]
