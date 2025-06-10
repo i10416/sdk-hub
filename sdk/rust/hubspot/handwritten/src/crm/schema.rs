@@ -86,20 +86,26 @@ impl PropertyValue {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PropertyValueVersion {
+    // NOTE: It seems this field is absent on object modification
     #[serde(default)]
     name: Option<String>,
     #[serde(default)]
     value: String,
+    // NOTE: It seems this field is absent on object modification
     #[serde(default)]
     source: Option<String>,
     timestamp: u64,
-    source_id: String,
-    request_id: String,
+    // NOTE: It seems this field is absent on object modification
+    #[serde(default)]
+    source_id: Option<String>,
+    // NOTE: It seems this field is absent on object modification
+    #[serde(default)]
+    request_id: Option<String>,
     #[serde(default)]
     source_upstream_deployable: Option<String>,
     #[serde(default)]
     is_encrypted: bool,
-    updated_by_user_id: i32,
+    updated_by_user_id: Option<i32>,
     #[serde(default)]
     use_timestamp_as_persistence_timestamp: bool,
 }
@@ -123,15 +129,15 @@ impl PropertyValueVersion {
     pub fn is_encrypted(&self) -> bool {
         self.is_encrypted
     }
-    pub fn source_id(&self) -> &str {
-        &self.source_id
+    pub fn source_id(&self) -> Option<&str> {
+        self.source_id.as_deref()
     }
-    pub fn updated_by_user_id(&self) -> i32 {
+    pub fn updated_by_user_id(&self) -> Option<i32> {
         self.updated_by_user_id
     }
 
-    pub fn request_id(&self) -> &str {
-        &self.request_id
+    pub fn request_id(&self) -> Option<&str> {
+        self.request_id.as_deref()
     }
     pub fn source_upstream_deployable(&self) -> Option<&str> {
         self.source_upstream_deployable.as_deref()
