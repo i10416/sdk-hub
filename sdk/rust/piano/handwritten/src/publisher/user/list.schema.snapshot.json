@@ -15,7 +15,7 @@
       "image1": null,
       "create_date": 1626841495,
       "display_name": "***MASKED***",
-      "reset_password_email_sent": "test@example.com",
+      "reset_password_email_sent": false,
       "custom_fields": [
         {
           "fieldName": "***MASKED***",

@@ -10,7 +10,7 @@
     "image1": null,
     "create_date": 1626859495,
     "display_name": "***MASKED***",
-    "reset_password_email_sent": "test@example.com",
+    "reset_password_email_sent": false,
     "custom_fields": [
       {
         "fieldName": "***MASKED***",
@@ -41,7 +41,7 @@
         "value": "[\"Option 1\"]",
         "created": "2021-07-21T09:26:12.000+00:00",
         "emailCreator": "test@example.com",
-        "sortOrder": 2,
+        "sortOrder": null,
         "fieldDefinitionId": "***MASKED***",
         "identityId": "***MASKED***",
         "dataType": "SINGLE_SELECT_LIST",
@@ -54,7 +54,7 @@
           "Option 2"
         ],
         "favouriteOptions": null,
-        "defaultSortOrder": 2,
+        "defaultSortOrder": null,
         "tooltip": {
           "enabled": false,
           "type": "InfoIcon",

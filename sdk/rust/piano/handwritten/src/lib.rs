@@ -96,6 +96,12 @@ pub struct PianoPaginated<T> {
     pub value: T,
 }
 
+impl<T> PianoPaginated<T> {
+    pub fn has_next(&self) -> bool {
+        self.offset + self.count < self.total
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ValidationErrors {
     pub message: String,

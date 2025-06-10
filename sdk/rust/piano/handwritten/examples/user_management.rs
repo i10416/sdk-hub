@@ -47,9 +47,7 @@ async fn main() -> Result<(), piano_handwritten_api::Error> {
             println!("✓ User found!");
             println!("  UID: {}", user.uid());
             println!("  Email: {}", user.email());
-            if let Some(create_date) = user.create_date() {
-                println!("  Created: {}", create_date);
-            }
+            println!("  Created: {}", user.create_date());
         }
         Ok(None) => println!("ℹ User not found"),
         Err(e) => println!("✗ Failed to get user: {}", e),
