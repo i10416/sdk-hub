@@ -1,3 +1,4 @@
+pub mod types;
 use serde::{Deserialize, Serialize};
 
 // Resource type
