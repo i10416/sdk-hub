@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "modules/codegen"
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = [
+  "Your Name <your.email@example.com>"
+]
+description = "SDK Hub Tools"
+license = "MIT"
+
+[workspace.dependencies]
+

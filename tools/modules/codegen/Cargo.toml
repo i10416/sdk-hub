@@ -1,0 +1,11 @@
+[package]
+name = "codegen"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "Code generation utilities for SDK Hub"
+license.workspace = true
+
+[dependencies]
+syn = { version = "2.0", no-default-features = true, features = ["full","visit"] }
+
