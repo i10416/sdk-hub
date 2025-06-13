@@ -375,6 +375,10 @@ pub struct Resource {
 }
 
 impl Resource {
+    pub fn purchase_url(&self) -> Option<&str> {
+        self.purchase_url.as_deref()
+    }
+
     /// Get the resource RID
     pub fn rid(&self) -> &str {
         &self.rid
